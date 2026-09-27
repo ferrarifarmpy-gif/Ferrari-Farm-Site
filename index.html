@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="pageTitle">PharmaPrime | Saúde & Otimização Metabólica</title>
+    <title id="pageTitle">PharmaPrime | Catálogo Oficial de Alta Performance</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -31,29 +31,26 @@
         }
     </script>
     
-    <!-- Google Fonts & FontAwesome -->
+    <!-- Google Fonts & FontAwesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         body {
             font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent;
-            user-select: none;
         }
-        /* Custom Smooth Scrollbar */
+        /* Scrollbar customizada */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        /* Hide scrollbars for clean UI horizontal lists */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Modal Backdrop blur & animations */
+        /* Modal Animations */
         .modal-animate-enter { animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes modalIn {
             from { opacity: 0; transform: translateY(100%); }
@@ -72,13 +69,16 @@
     <div id="devBar" class="hidden bg-amber-500 text-amber-950 px-4 py-2 text-xs font-bold flex justify-between items-center sticky top-0 z-50 shadow-md">
         <div class="flex items-center gap-2 truncate">
             <i class="fa-solid fa-user-shield text-sm"></i>
-            <span class="truncate">MODO DESENVOLVEDOR ATIVO — Clique em "Editar" nos cards ou abra as configurações.</span>
+            <span class="truncate">MODO ADMIN ATIVO — Edite produtos, troque fotos e personalize a mensagem do WhatsApp.</span>
         </div>
         <div class="flex items-center gap-2">
-            <button onclick="openDevSettingsModal()" class="bg-amber-900 text-white px-2.5 py-1 rounded-lg text-[11px] hover:bg-black transition flex items-center gap-1">
-                <i class="fa-solid fa-gear"></i> Opções
+            <button onclick="openDevSettingsModal()" class="bg-amber-900 text-white px-3 py-1 rounded-lg text-[11px] hover:bg-black transition flex items-center gap-1">
+                <i class="fa-solid fa-sliders"></i> Ajustes WhatsApp / Loja
             </button>
-            <button onclick="toggleDevMode(false)" class="bg-amber-950/80 text-white px-2 py-1 rounded-lg text-[11px] hover:bg-black transition">
+            <button onclick="openProductEditor()" class="bg-brand-800 text-white px-3 py-1 rounded-lg text-[11px] hover:bg-black transition flex items-center gap-1">
+                <i class="fa-solid fa-plus"></i> Novo Produto
+            </button>
+            <button onclick="toggleDevMode(false)" class="bg-amber-950/80 text-white px-2.5 py-1 rounded-lg text-[11px] hover:bg-black transition">
                 Sair
             </button>
         </div>
@@ -87,7 +87,7 @@
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
             
-            <!-- Logo Brand -->
+            <!-- Brand Logo -->
             <a href="#" class="flex items-center gap-2.5 group">
                 <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-700 to-brand-500 text-white flex items-center justify-center font-extrabold text-xl shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
                     <i class="fa-solid fa-vial-circle-check text-lg"></i>
@@ -96,36 +96,35 @@
                     <span id="headerBrandName" class="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 leading-none">
                         Pharma<span class="text-brand-600">Prime</span>
                     </span>
-                    <span class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase mt-0.5">Saúde & Alta Performance</span>
+                    <span class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase mt-0.5">Saúde & Atendimento Exclusivo</span>
                 </div>
             </a>
 
-            <!-- Search Bar Desktop & Tablet -->
+            <!-- Search Desktop -->
             <div class="hidden sm:flex flex-1 max-w-md mx-4 relative">
-                <input type="text" id="desktopSearchInput" oninput="handleSearch(this.value)" placeholder="Buscar Tirzepatida, Mounjaro, Lipoless..." class="w-full pl-10 pr-4 py-2 bg-slate-100 border border-transparent rounded-2xl text-xs focus:bg-white focus:border-brand-500 focus:outline-none transition">
+                <input type="text" id="desktopSearchInput" oninput="handleSearch(this.value)" placeholder="Buscar Tirzepatida, Lipoless, Retratrutide..." class="w-full pl-10 pr-4 py-2 bg-slate-100 border border-transparent rounded-2xl text-xs focus:bg-white focus:border-brand-500 focus:outline-none transition">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
             </div>
 
-            <!-- Top Header Actions -->
+            <!-- Actions Header -->
             <div class="flex items-center gap-2">
-                <!-- Cart Button (Desktop) -->
-                <button onclick="toggleCartModal(true)" class="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand-600 transition font-semibold text-xs relative">
+                <button onclick="toggleCartModal(true)" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-2xl bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand-600 transition font-semibold text-xs relative">
                     <i class="fa-solid fa-bag-shopping text-base"></i>
                     <span>Carrinho</span>
                     <span id="desktopCartBadge" class="bg-brand-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
                 </button>
 
-                <!-- Dev Access Icon -->
-                <button onclick="triggerDevAccess()" title="Painel do Desenvolvedor" class="p-2.5 rounded-2xl bg-slate-100 text-slate-500 hover:text-brand-600 hover:bg-brand-50 transition">
+                <!-- Admin Access Modal Trigger -->
+                <button onclick="triggerDevAccess()" title="Painel Admin" class="p-2.5 rounded-2xl bg-slate-100 text-slate-500 hover:text-brand-600 hover:bg-brand-50 transition">
                     <i class="fa-solid fa-sliders text-base"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Mobile Search Bar Sub-header -->
+        <!-- Mobile Search Header -->
         <div class="sm:hidden px-4 pb-3">
             <div class="relative">
-                <input type="text" id="mobileSearchInput" oninput="handleSearch(this.value)" placeholder="Buscar Tirzepatida, Mounjaro, Lipoless..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-transparent rounded-xl text-xs focus:bg-white focus:border-brand-500 focus:outline-none transition">
+                <input type="text" id="mobileSearchInput" oninput="handleSearch(this.value)" placeholder="Buscar Tirzepatida, Lipoless, Retratrutide..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-transparent rounded-xl text-xs focus:bg-white focus:border-brand-500 focus:outline-none transition">
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
             </div>
         </div>
@@ -133,43 +132,42 @@
 
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
 
-        <!-- Mobile / Desktop Hero Promo Banner -->
+        <!-- Hero Banner Promo -->
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-brand-900 to-slate-900 text-white p-5 sm:p-8 shadow-xl">
             <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-brand-500/20 rounded-full blur-3xl pointer-events-none"></div>
             <div class="relative z-10 max-w-xl space-y-2">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-400/30 text-brand-300 text-[11px] font-bold uppercase tracking-wider">
-                    <i class="fa-solid fa-shield-halved text-brand-400"></i> Envio 100% Discreto & Seguro
+                    <i class="fa-solid fa-shield-halved text-brand-400"></i> Envio Discreto & Seguro para todo o Brasil
                 </span>
                 <h1 class="text-xl sm:text-3xl font-extrabold tracking-tight leading-tight">
-                    Catálogo Oficial de <span class="text-brand-400">Emagrecimento & Alta Performance</span>
+                    Catálogo de <span class="text-brand-400">Otimização Metabólica & Alta Performance</span>
                 </h1>
                 <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                    Compre Tirzepatida, Mounjaro e Lipoless diretamente com suporte especializado via WhatsApp e desconto exclusivo no PIX.
+                    Compre direto com atendimento no WhatsApp. Entregas garantidas e embalagem 100% discreta.
                 </p>
             </div>
         </div>
 
-        <!-- Category Filters Pill Bar (Mobile Horizontally Scrollable) -->
+        <!-- Categories horizontal bar -->
         <div class="space-y-3">
             <div class="flex items-center justify-between">
                 <h2 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-fire text-amber-500"></i> Produtos em Destaque
+                    <i class="fa-solid fa-fire text-amber-500"></i> Produtos Disponíveis
                 </h2>
                 <span id="productCountBadge" class="text-xs text-slate-400 font-medium">Exibindo 0 produtos</span>
             </div>
 
-            <!-- Category Pills -->
             <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="categoryContainer">
                 <!-- Dynamically rendered categories -->
             </div>
         </div>
 
-        <!-- Products Grid (2 columns on mobile, 3 on tablet, 4 on desktop) -->
+        <!-- Products Grid -->
         <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             <!-- Dynamically rendered products -->
         </div>
 
-        <!-- Empty State Message -->
+        <!-- Empty Search State -->
         <div id="emptyState" class="hidden text-center py-12 space-y-3">
             <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-2xl">
                 <i class="fa-solid fa-box-open"></i>
@@ -198,7 +196,7 @@
         </button>
         <button onclick="triggerDevAccess()" class="flex flex-col items-center gap-1 text-slate-500 hover:text-brand-600">
             <i class="fa-solid fa-sliders text-base"></i>
-            <span class="text-[10px] font-medium">Painel Dev</span>
+            <span class="text-[10px] font-medium">Painel Admin</span>
         </button>
     </nav>
 
@@ -206,7 +204,6 @@
         <div onclick="toggleCartModal(false)" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"></div>
         <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col h-full modal-animate-enter">
             
-            <!-- Cart Header -->
             <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-bag-shopping text-brand-600 text-lg"></i>
@@ -217,24 +214,31 @@
                 </button>
             </div>
 
-            <!-- Cart Items List -->
+            <!-- Cart Items -->
             <div id="cartItemsList" class="flex-1 overflow-y-auto p-4 space-y-3">
                 <!-- Cart items JS rendered -->
             </div>
 
-            <!-- Cart Footer Checkout -->
+            <!-- Customer Name & Checkout Footer -->
             <div class="p-4 border-t border-slate-100 bg-slate-50 space-y-3">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1">Seu Nome (Opcional):</label>
+                    <input type="text" id="customerNameInput" placeholder="Ex: João Silva" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-semibold text-slate-500">Subtotal do pedido:</span>
                     <span id="cartSubtotal" class="font-black text-lg text-slate-900">R$ 0,00</span>
                 </div>
+
                 <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-100 text-[11px] text-emerald-800 flex items-center gap-2">
                     <i class="fa-solid fa-truck-fast text-emerald-600 text-sm"></i>
-                    <span>Envio discreto sem identificação de conteúdo na caixa.</span>
+                    <span>Envio em caixa discreta sem identificação de conteúdo.</span>
                 </div>
+
                 <button onclick="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold py-3.5 px-4 rounded-2xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2 text-sm">
                     <i class="fa-brands fa-whatsapp text-lg"></i>
-                    <span>Finalizar Pedido no WhatsApp</span>
+                    <span>Enviar Pedido pelo WhatsApp</span>
                 </button>
             </div>
         </div>
@@ -246,20 +250,20 @@
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-lock text-brand-600 text-base"></i>
-                    <h3 class="font-extrabold text-slate-900 text-base">Acesso do Desenvolvedor</h3>
+                    <h3 class="font-extrabold text-slate-900 text-base">Acesso de Administrador</h3>
                 </div>
                 <button onclick="closeDevAuthModal()" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <p class="text-xs text-slate-500">Digite a senha administrativa para editar preços, trocar fotos e gerenciar o catálogo.</p>
+            <p class="text-xs text-slate-500">Digite a senha para personalizar preços, imagens e o modelo de mensagem do WhatsApp.</p>
             <form onsubmit="handleDevLogin(event)" class="space-y-3">
                 <div>
-                    <input type="password" id="devPasswordInput" placeholder="Senha de Admin (Padrão: admin123)" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
+                    <input type="password" id="devPasswordInput" placeholder="Senha Admin (Padrão: admin123)" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
                 </div>
                 <p id="devLoginError" class="text-red-500 text-[11px] hidden font-semibold">Senha incorreta. Tente novamente.</p>
                 <button type="submit" class="w-full bg-brand-600 text-white font-bold py-3 rounded-xl text-xs hover:bg-brand-700 transition shadow-md shadow-brand-600/20">
-                    Entrar no Painel Dev
+                    Entrar no Painel Admin
                 </button>
             </form>
         </div>
@@ -280,7 +284,7 @@
                 
                 <div>
                     <label class="block font-bold text-slate-700 mb-1">Nome do Produto</label>
-                    <input type="text" id="editProductName" placeholder="Ex: Tirzepatida 10mg" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
+                    <input type="text" id="editProductName" placeholder="Ex: Tirzec 15" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
@@ -289,7 +293,7 @@
                         <input type="number" step="0.01" id="editProductPrice" placeholder="0.00" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
                     </div>
                     <div>
-                        <label class="block font-bold text-slate-700 mb-1">Preço Antigo / Riscos (R$)</label>
+                        <label class="block font-bold text-slate-700 mb-1">Preço Riscado (R$)</label>
                         <input type="number" step="0.01" id="editProductOldPrice" placeholder="Opcional" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
                 </div>
@@ -297,7 +301,7 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Categoria</label>
-                        <input type="text" id="editProductCategory" placeholder="Ex: Peptídeos / Canetas" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
+                        <input type="text" id="editProductCategory" placeholder="Ex: Injetáveis / Cápsulas" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
                     </div>
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Estoque</label>
@@ -308,17 +312,15 @@
                     </div>
                 </div>
 
-                <!-- IMAGE SOURCE SELECTION (URL or File Upload) -->
+                <!-- IMAGE SOURCE SELECTION -->
                 <div class="space-y-2 p-3 bg-slate-50 rounded-2xl border border-slate-100">
                     <label class="block font-bold text-slate-800">Imagem do Produto (Troca rápida)</label>
                     
-                    <!-- Preview Box -->
                     <div class="flex items-center gap-3">
                         <img id="imagePreview" src="" class="w-16 h-16 rounded-xl object-cover bg-slate-200 border border-slate-200 hidden">
                         <span id="noPreviewText" class="text-[11px] text-slate-400 italic">Nenhuma imagem carregada.</span>
                     </div>
 
-                    <!-- Option A: File Upload from Phone / PC -->
                     <div>
                         <span class="block text-[11px] font-semibold text-slate-600 mb-1">Upload do Celular ou Computador:</span>
                         <input type="file" id="editProductFile" accept="image/*" onchange="handleFileUpload(event)" class="block w-full text-[11px] text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-semibold file:bg-brand-100 file:text-brand-800 hover:file:bg-brand-200 cursor-pointer">
@@ -326,7 +328,6 @@
 
                     <div class="text-center font-bold text-[10px] text-slate-400 uppercase tracking-widest my-1">— OU —</div>
 
-                    <!-- Option B: Image URL -->
                     <div>
                         <span class="block text-[11px] font-semibold text-slate-600 mb-1">Link/URL de Imagem Externa:</span>
                         <input type="url" id="editProductImageUrl" placeholder="https://..." oninput="previewUrlImage(this.value)" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-xs">
@@ -334,8 +335,8 @@
                 </div>
 
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">Descrição Curta do Produto</label>
-                    <textarea id="editProductDesc" rows="2" placeholder="Resumo de indicação e detalhes..." class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required></textarea>
+                    <label class="block font-bold text-slate-700 mb-1">Descrição do Produto</label>
+                    <textarea id="editProductDesc" rows="2" placeholder="Resumo de indicação e dosagem..." class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required></textarea>
                 </div>
 
                 <div class="pt-2 flex justify-end gap-2">
@@ -348,11 +349,11 @@
 
     <div id="devSettingsModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 sm:p-4">
         <div onclick="closeDevSettingsModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-5 sm:p-6 space-y-4 modal-animate-enter z-10">
+        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-5 sm:p-6 space-y-4 modal-animate-enter z-10 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-gear text-brand-600 text-base"></i>
-                    <h3 class="font-extrabold text-slate-900 text-base">Configurações Gerais do Dev</h3>
+                    <h3 class="font-extrabold text-slate-900 text-base">Configurações Gerais & WhatsApp</h3>
                 </div>
                 <button onclick="closeDevSettingsModal()" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark"></i>
@@ -366,18 +367,33 @@
                 </div>
 
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">Número do WhatsApp (com DDD e 55)</label>
+                    <label class="block font-bold text-slate-700 mb-1">Número do WhatsApp Recebedor (com DDD e 55)</label>
                     <input type="text" id="settingWhatsApp" placeholder="Ex: 5511999998888" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
-                    <span class="text-[10px] text-slate-400 mt-1 block">Os pedidos do carrinho serão enviados para este número.</span>
+                    <span class="text-[10px] text-slate-400 mt-1 block">Os pedidos do carrinho serão enviados para este WhatsApp.</span>
+                </div>
+
+                <!-- WHATSAPP MESSAGE CUSTOMIZER -->
+                <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-100 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="block font-bold text-emerald-900">Modelo da Mensagem do WhatsApp</label>
+                        <span class="text-[10px] font-semibold bg-emerald-200/60 text-emerald-800 px-2 py-0.5 rounded-md">Personalizável</span>
+                    </div>
+                    <p class="text-[10px] text-emerald-700 leading-normal">
+                        Você pode usar as seguintes variáveis no seu texto:<br>
+                        <code class="font-bold">{produtos}</code> = Lista dos itens com quantidades e preços<br>
+                        <code class="font-bold">{total}</code> = Valor total calculado<br>
+                        <code class="font-bold">{cliente}</code> = Nome digitado pelo cliente
+                    </p>
+                    <textarea id="settingWaTemplate" rows="6" class="w-full p-2.5 bg-white border border-emerald-200 rounded-xl font-mono text-[11px] focus:ring-2 focus:ring-emerald-500 focus:outline-none" required></textarea>
                 </div>
 
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">Nova Senha do Desenvolvedor</label>
+                    <label class="block font-bold text-slate-700 mb-1">Nova Senha de Administrador</label>
                     <input type="password" id="settingAdminPassword" placeholder="Deixe em branco para manter a atual" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
                 </div>
 
                 <div class="pt-2 flex justify-between items-center">
-                    <button type="button" onclick="resetToDefaults()" class="text-red-500 hover:underline font-semibold text-[11px]">Restaurar Dados Padrão</button>
+                    <button type="button" onclick="resetToDefaults()" class="text-red-500 hover:underline font-semibold text-[11px]">Restaurar Dados Originais</button>
                     <div class="flex gap-2">
                         <button type="button" onclick="closeDevSettingsModal()" class="px-3.5 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold">Cancelar</button>
                         <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition">Salvar Alterações</button>
@@ -388,66 +404,158 @@
     </div>
 
     <script>
-        // Default System Data
+        // System Settings Defaults
         const DEFAULT_SETTINGS = {
             storeName: "PharmaPrime",
             whatsapp: "5511999999999",
-            adminPassword: "admin123"
+            adminPassword: "admin123",
+            waTemplate: "🛒 *NOVO PEDIDO - {loja}*\n\nOlá, gostaria de confirmar o seguinte pedido:\n\n{produtos}\n*TOTAL:* R$ {total}\n*CLIENTE:* {cliente}\n\nPor favor, envie as opções para pagamento no PIX e dados de entrega."
         };
 
+        // User Products List with updated prices and descriptions
         const DEFAULT_PRODUCTS = [
             {
-                id: 'tirzepatida-10mg',
-                name: 'Tirzepatida 10mg',
-                category: 'Injetáveis',
-                price: 650.00,
-                oldPrice: 750.00,
+                id: 'tg-15',
+                name: 'TG 15',
+                category: 'Tirzepatida',
+                price: 750.00,
+                oldPrice: 850.00,
                 image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Dual receptor GLP-1/GIP de alta pureza para rápida otimização metabólica.',
+                description: 'Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos.',
                 inStock: true
             },
             {
-                id: 'mounjaro-5mg',
-                name: 'Mounjaro 5mg',
-                category: 'Canetas',
-                price: 1350.00,
-                oldPrice: 1500.00,
-                image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=600&q=80',
-                description: 'Caneta aplicadora lacrada original com dosagem controlada.',
+                id: 'lipoless-15-cx',
+                name: 'Lipoless 15',
+                category: 'Tirzepatida',
+                price: 750.00,
+                oldPrice: 850.00,
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
+                description: 'Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos.',
                 inStock: true
             },
             {
-                id: 'lipoless-complex',
-                name: 'Lipoless Complex',
-                category: 'Cápsulas',
-                price: 280.00,
-                oldPrice: 340.00,
-                image: 'https://images.unsplash.com/photo-1550572017-edd951aa8f72?auto=format&fit=crop&w=600&q=80',
-                description: 'Acelerador metabólico em cápsulas para queima de gordura visceral.',
+                id: 'lipoless-md-15',
+                name: 'Lipoless MD 15',
+                category: 'Tirzepatida',
+                price: 730.00,
+                oldPrice: 800.00,
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
+                description: 'Tirzepatida 15 mg/0,6 mL — Vial Multidose 1 unidade.',
                 inStock: true
             },
             {
-                id: 'semaglutida-4mg',
-                name: 'Semaglutida 4mg',
-                category: 'Injetáveis',
-                price: 520.00,
-                oldPrice: 600.00,
-                image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=600&q=80',
-                description: 'Solução para controle de apetite e saciedade prolongada.',
+                id: 'tirzec-15-cx',
+                name: 'Tirzec 15',
+                category: 'Tirzepatida',
+                price: 750.00,
+                oldPrice: 850.00,
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
+                description: 'Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos.',
+                inStock: true
+            },
+            {
+                id: 'tirzec-md',
+                name: 'Tirzec MD',
+                category: 'Tirzepatida',
+                price: 730.00,
+                oldPrice: 800.00,
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
+                description: 'Tirzepatida 15 mg/0,5 mL — 1 unidade.',
+                inStock: true
+            },
+            {
+                id: 'gluconex-15',
+                name: 'Gluconex 15 / Clucomax',
+                category: 'Tirzepatida',
+                price: 750.00,
+                oldPrice: 850.00,
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
+                description: 'Tirzepatida 15 mg/1,00 mL — Caixa com 4 frascos.',
+                inStock: true
+            },
+            {
+                id: 't36-15',
+                name: 'T36 15',
+                category: 'Tirzepatida',
+                price: 750.00,
+                oldPrice: 850.00,
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
+                description: 'Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos.',
+                inStock: true
+            },
+            {
+                id: 'tirzedral',
+                name: 'Tirzedral',
+                category: 'Tirzepatida',
+                price: 750.00,
+                oldPrice: 850.00,
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
+                description: 'Tirzepatida — Caixa com 4 frascos.',
+                inStock: true
+            },
+            {
+                id: 'lipoland-15',
+                name: 'Lipoland 15',
+                category: 'Tirzepatida',
+                price: 750.00,
+                oldPrice: 850.00,
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
+                description: 'Tirzepatida Gold Series 15 mg/0,5 mL — Caixa com 4 frascos.',
+                inStock: true
+            },
+            {
+                id: 'retratrutide-natural',
+                name: 'Retratrutide Natural',
+                category: 'Retatrutide',
+                price: 1050.00,
+                oldPrice: 1200.00,
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
+                description: 'TriActive Metabolic Complex — Caixa com 4.',
+                inStock: true
+            },
+            {
+                id: 'retratrutide-veltrane',
+                name: 'Retratrutide Veltrane Gold',
+                category: 'Retatrutide',
+                price: 850.00,
+                oldPrice: 950.00,
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
+                description: '90 mg | 6 ml | 15 mg/ml — Caixa com 4.',
+                inStock: true
+            },
+            {
+                id: 'rowa-chol',
+                name: 'Rowa Chol',
+                category: 'Complementos',
+                price: 140.00,
+                oldPrice: 160.00,
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
+                description: 'Fórmula de suporte hepatobiliar e digestivo.',
+                inStock: true
+            },
+            {
+                id: 'rowa-tinex',
+                name: 'Rowa Tinex',
+                category: 'Complementos',
+                price: 135.00,
+                oldPrice: 155.00,
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
+                description: 'Suporte especializado para vias urinárias e renais.',
                 inStock: true
             }
         ];
 
-        // State variables
-        let settings = JSON.parse(localStorage.getItem('pharma_settings')) || DEFAULT_SETTINGS;
-        let products = JSON.parse(localStorage.getItem('pharma_products')) || DEFAULT_PRODUCTS;
-        let cart = JSON.parse(localStorage.getItem('pharma_cart')) || [];
+        // Global State Variables
+        let settings = JSON.parse(localStorage.getItem('pharma_settings_v2')) || DEFAULT_SETTINGS;
+        let products = JSON.parse(localStorage.getItem('pharma_products_v2')) || DEFAULT_PRODUCTS;
+        let cart = JSON.parse(localStorage.getItem('pharma_cart_v2')) || [];
         let isDevMode = false;
         let selectedCategory = 'Todos';
         let searchQuery = '';
         let currentUploadedBase64 = null;
 
-        // Initialize App
+        // Initialize on DOM Load
         window.addEventListener('DOMContentLoaded', () => {
             renderHeader();
             renderCategories();
@@ -456,7 +564,7 @@
         });
 
         function renderHeader() {
-            document.getElementById('pageTitle').textContent = `${settings.storeName} | Saúde & Alta Performance`;
+            document.getElementById('pageTitle').textContent = `${settings.storeName} | Catálogo Oficial`;
             document.getElementById('headerBrandName').innerHTML = `${settings.storeName.substring(0, 6)}<span class="text-brand-600">${settings.storeName.substring(6) || ''}</span>`;
             document.getElementById('devBar').classList.toggle('hidden', !isDevMode);
         }
@@ -500,10 +608,9 @@
             grid.innerHTML = filtered.map(p => `
                 <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between relative group">
                     
-                    <!-- Admin Quick Actions Hover Overlay -->
                     ${isDevMode ? `
                         <div class="absolute top-2 right-2 z-20 flex gap-1 bg-white/90 backdrop-blur p-1 rounded-xl shadow border border-slate-200">
-                            <button onclick="openProductEditor('${p.id}')" title="Editar Produto/Imagem" class="w-7 h-7 bg-brand-50 text-brand-700 hover:bg-brand-600 hover:text-white rounded-lg flex items-center justify-center transition text-xs">
+                            <button onclick="openProductEditor('${p.id}')" title="Editar Produto/Foto" class="w-7 h-7 bg-brand-50 text-brand-700 hover:bg-brand-600 hover:text-white rounded-lg flex items-center justify-center transition text-xs">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
                             <button onclick="deleteProduct('${p.id}')" title="Excluir Produto" class="w-7 h-7 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center transition text-xs">
@@ -512,7 +619,6 @@
                         </div>
                     ` : ''}
 
-                    <!-- Product Image -->
                     <div class="relative aspect-square bg-slate-100 overflow-hidden">
                         <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                         
@@ -527,7 +633,6 @@
                         ` : ''}
                     </div>
 
-                    <!-- Product Info Body -->
                     <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2">
                         <div>
                             <h3 class="font-extrabold text-slate-900 text-xs sm:text-sm line-clamp-1">${p.name}</h3>
@@ -581,14 +686,13 @@
         }
 
         function saveCart() {
-            localStorage.setItem('pharma_cart', JSON.stringify(cart));
+            localStorage.setItem('pharma_cart_v2', JSON.stringify(cart));
         }
 
         function updateCartUI() {
             const count = cart.reduce((sum, item) => sum + item.quantity, 0);
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-            // Update Badges
             ['desktopCartBadge', 'mobileCartBadge'].forEach(id => {
                 const badge = document.getElementById(id);
                 if (badge) {
@@ -597,10 +701,8 @@
                 }
             });
 
-            // Update Subtotal
             document.getElementById('cartSubtotal').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
 
-            // Render Cart Drawer Items
             const list = document.getElementById('cartItemsList');
             if (cart.length === 0) {
                 list.innerHTML = `
@@ -633,22 +735,32 @@
         }
 
         function checkoutWhatsApp() {
-            if (cart.length === 0) return alert('Adicione produtos ao carrinho antes de finalizar.');
+            if (cart.length === 0) {
+                alert('Adicione produtos ao carrinho antes de enviar o pedido.');
+                return;
+            }
 
-            let msg = `🛒 *PEDIDO - ${settings.storeName.toUpperCase()}*\n\n`;
+            const customerName = document.getElementById('customerNameInput').value.trim() || "Cliente sem nome";
+
+            let productsListText = "";
             cart.forEach(item => {
-                msg += `• *${item.quantity}x ${item.name}* — R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}\n`;
+                productsListText += `• *${item.quantity}x ${item.name}* — R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}\n`;
             });
 
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            msg += `\n*TOTAL:* R$ ${total.toFixed(2).replace('.', ',')}\n\n`;
-            msg += `Gostaria de confirmar os dados para envio e opções de pagamento (PIX/Cartão).`;
+            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2).replace('.', ',');
+
+            // Replace template variables
+            let msg = settings.waTemplate || DEFAULT_SETTINGS.waTemplate;
+            msg = msg.replace(/{loja}/g, settings.storeName)
+                     .replace(/{produtos}/g, productsListText)
+                     .replace(/{total}/g, totalAmount)
+                     .replace(/{cliente}/g, customerName);
 
             window.open(`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function openWhatsAppDirect() {
-            window.open(`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent('Olá! Gostaria de tirar dúvidas sobre os produtos de bem-estar.')}`, '_blank');
+            window.open(`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent('Olá! Gostaria de tirar dúvidas sobre o catálogo de produtos.')}`, '_blank');
         }
 
         function triggerDevAccess() {
@@ -670,7 +782,7 @@
             if (pwd === settings.adminPassword) {
                 toggleDevMode(true);
                 closeDevAuthModal();
-                alert('Modo Desenvolvedor Ativado com Sucesso!');
+                alert('Modo Administrador Ativado!');
             } else {
                 document.getElementById('devLoginError').classList.remove('hidden');
             }
@@ -682,7 +794,6 @@
             renderProducts();
         }
 
-        // Product Editor Modal Logic (Image Upload & Details)
         function openProductEditor(productId = null) {
             currentUploadedBase64 = null;
             document.getElementById('editProductFile').value = '';
@@ -700,7 +811,6 @@
                 document.getElementById('editProductImageUrl').value = p.image.startsWith('data:') ? '' : p.image;
                 document.getElementById('editProductDesc').value = p.description;
 
-                // Preview Image
                 setPreviewImage(p.image);
             } else {
                 document.getElementById('editorModalTitle').textContent = 'Novo Produto';
@@ -729,14 +839,14 @@
                 reader.onload = function(e) {
                     currentUploadedBase64 = e.target.result;
                     setPreviewImage(currentUploadedBase64);
-                    document.getElementById('editProductImageUrl').value = ''; // clear url input
+                    document.getElementById('editProductImageUrl').value = '';
                 };
                 reader.readAsDataURL(file);
             }
         }
 
         function previewUrlImage(url) {
-            currentUploadedBase64 = null; // override file upload if URL typed
+            currentUploadedBase64 = null;
             setPreviewImage(url);
         }
 
@@ -758,7 +868,6 @@
             e.preventDefault();
             const id = document.getElementById('editProductId').value || 'prod_' + Date.now();
             
-            // Image selection prioritization (Upload > URL > Default Fallback)
             let finalImage = currentUploadedBase64 || document.getElementById('editProductImageUrl').value.trim();
             if (!finalImage) {
                 finalImage = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80';
@@ -782,7 +891,7 @@
                 products.push(newProduct);
             }
 
-            localStorage.setItem('pharma_products', JSON.stringify(products));
+            localStorage.setItem('pharma_products_v2', JSON.stringify(products));
             closeProductEditorModal();
             renderCategories();
             renderProducts();
@@ -791,16 +900,16 @@
         function deleteProduct(productId) {
             if (confirm('Tem certeza que deseja excluir este produto do catálogo?')) {
                 products = products.filter(p => p.id !== productId);
-                localStorage.setItem('pharma_products', JSON.stringify(products));
+                localStorage.setItem('pharma_products_v2', JSON.stringify(products));
                 renderCategories();
                 renderProducts();
             }
         }
 
-        // Developer Settings Modal
         function openDevSettingsModal() {
             document.getElementById('settingStoreName').value = settings.storeName;
             document.getElementById('settingWhatsApp').value = settings.whatsapp;
+            document.getElementById('settingWaTemplate').value = settings.waTemplate || DEFAULT_SETTINGS.waTemplate;
             document.getElementById('settingAdminPassword').value = '';
             document.getElementById('devSettingsModal').classList.remove('hidden');
         }
@@ -813,20 +922,21 @@
             e.preventDefault();
             settings.storeName = document.getElementById('settingStoreName').value;
             settings.whatsapp = document.getElementById('settingWhatsApp').value;
+            settings.waTemplate = document.getElementById('settingWaTemplate').value;
             
             const newPwd = document.getElementById('settingAdminPassword').value;
             if (newPwd.trim() !== '') {
                 settings.adminPassword = newPwd;
             }
 
-            localStorage.setItem('pharma_settings', JSON.stringify(settings));
+            localStorage.setItem('pharma_settings_v2', JSON.stringify(settings));
             renderHeader();
             closeDevSettingsModal();
-            alert('Configurações salvas!');
+            alert('Configurações e modelo do WhatsApp salvos com sucesso!');
         }
 
         function resetToDefaults() {
-            if (confirm('Deseja restaurar todos os produtos e configurações para o estado inicial?')) {
+            if (confirm('Deseja restaurar todos os produtos, preços e mensagens para os padrões iniciais?')) {
                 localStorage.clear();
                 settings = DEFAULT_SETTINGS;
                 products = DEFAULT_PRODUCTS;
@@ -835,7 +945,7 @@
             }
         }
 
-        // Filters Handling
+        // Search & Category Filters
         function selectCategory(cat) {
             selectedCategory = cat;
             renderCategories();
