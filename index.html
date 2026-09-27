@@ -55,10 +55,6 @@
           <i class="fa-solid fa-shopping-bag text-lg"></i>
           <span id="cartBadge" class="hidden absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] font-bold w-5 h-5 rounded-full items-center justify-center border-2 border-white">0</span>
         </button>
-
-        <button onclick="openAdminLogin()" title="Painel do Administrador" class="p-2.5 rounded-xl bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition">
-          <i class="fa-solid fa-sliders text-lg"></i>
-        </button>
       </div>
     </div>
   </header>
@@ -106,11 +102,6 @@
   <footer class="bg-white border-t border-gray-200 mt-12 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
       <p class="text-xs text-gray-500">© 2026 Ferrari Farm. Todos os direitos reservados.</p>
-      <div class="flex items-center gap-4 text-xs font-medium text-gray-500">
-        <button onclick="openAdminLogin()" class="hover:text-brand-600 transition flex items-center gap-1">
-          <i class="fa-solid fa-lock"></i> Painel Admin
-        </button>
-      </div>
     </div>
   </footer>
 
@@ -144,90 +135,21 @@
     </div>
   </div>
 
-  <!-- Modal Admin -->
-  <div id="adminModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-      <!-- Topo Modal Admin -->
-      <div class="p-4 bg-gray-900 text-white flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <i class="fa-solid fa-sliders text-brand-400"></i>
-          <h3 class="font-bold">Painel de Administração</h3>
-        </div>
-        <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white">
-          <i class="fa-solid fa-xmark text-xl"></i>
-        </button>
-      </div>
-
-      <!-- Formulário de Login Admin -->
-      <div id="adminLoginSection" class="p-8 text-center space-y-4 max-w-sm mx-auto w-full my-auto">
-        <i class="fa-solid fa-lock text-4xl text-gray-300"></i>
-        <h4 class="font-bold text-gray-800">Acesso Restrito</h4>
-        <p class="text-xs text-gray-500">Insira a senha para alterar preços e produtos.</p>
-        <input type="password" id="adminPasswordInput" placeholder="Senha do Admin" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-center focus:outline-none focus:border-brand-500">
-        <button onclick="authenticateAdmin()" class="w-full bg-gray-900 text-white font-semibold py-2.5 rounded-xl hover:bg-black transition">Entrar</button>
-      </div>
-
-      <!-- Conteúdo Admin Logado -->
-      <div id="adminContentSection" class="flex-1 overflow-y-auto p-6 space-y-6 hidden">
-        
-        <!-- Abas de Edição -->
-        <div class="flex border-b border-gray-200 gap-4">
-          <button onclick="switchAdminTab('products')" id="tabBtnProducts" class="pb-2 text-sm font-bold border-b-2 border-brand-600 text-brand-600">Produtos &amp; Preços</button>
-          <button onclick="switchAdminTab('whatsapp')" id="tabBtnWhatsapp" class="pb-2 text-sm font-bold text-gray-500">Configurações do WhatsApp</button>
-        </div>
-
-        <!-- Aba 1: Produtos -->
-        <div id="tabProducts" class="space-y-4">
-          <div class="flex justify-between items-center">
-            <h4 class="font-bold text-gray-800">Gerenciar Produtos</h4>
-            <button onclick="addNewProductPrompt()" class="bg-brand-600 text-white text-xs font-semibold px-3 py-2 rounded-lg hover:bg-brand-700 transition">
-              <i class="fa-solid fa-plus"></i> Novo Produto
-            </button>
-          </div>
-          <p class="text-[11px] text-gray-500">Para imagens: coloque o arquivo na mesma pasta do site (ex: <code class="bg-gray-100 px-1">tg15.jpg</code>) ou cole o link direto da imagem.</p>
-          <div id="adminProductsList" class="space-y-3 max-h-[350px] overflow-y-auto pr-2"></div>
-        </div>
-
-        <!-- Aba 2: WhatsApp -->
-        <div id="tabWhatsapp" class="space-y-4 hidden">
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Número do WhatsApp (DDD + Número):</label>
-            <input type="text" id="adminWhatsappNumber" placeholder="Ex: 5511999999999" class="w-full p-2.5 border rounded-lg text-sm">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Modelo de Mensagem:</label>
-            <p class="text-[11px] text-gray-500 mb-2">Campos automáticos: <b>{cliente}</b>, <b>{produtos}</b> e <b>{total}</b>.</p>
-            <textarea id="adminWhatsappTemplate" rows="6" class="w-full p-3 border rounded-lg text-sm font-mono bg-gray-50"></textarea>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Rodapé do Modal Admin -->
-      <div id="adminFooterSection" class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center hidden">
-        <button onclick="closeAdminModal()" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 font-semibold">Fechar</button>
-        <button onclick="saveAllChangesLocally()" id="btnSaveAll" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2"><i class="fa-solid fa-check"></i> Salvar Alterações</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Lógica da Aplicação -->
   <script>
-    // CONFIGURAÇÕES PADRÃO DO SITE
-    let defaultAppConfig = {
-      whatsappNumber: "5500000000000",
-      whatsappTemplate: "Olá! Gostaria de fazer o pedido abaixo:\n\n*Cliente:* {cliente}\n\n*Itens do Pedido:*\n{produtos}\n\n*Valor Total:* {total}\n\nAguardo confirmação dos dados para pagamento e envio!",
-      adminPassword: "admin123"
+    let appConfig = {
+      whatsappNumber: "595983187072",
+      whatsappTemplate: "Olá! Gostaria de fazer o pedido abaixo:\n\n*Cliente:* {cliente}\n\n*Itens do Pedido:*\n{produtos}\n\n*Valor Total:* {total}\n\nAguardo confirmação dos dados para pagamento e envio!"
     };
 
-    let defaultProducts = [
+    let products = [
       {
         id: 1,
         name: "TG 15",
         subtitle: "Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos",
         price: 750.00,
         category: "Tirzepatida",
-        image: "tg15.jpg"
+        image: "tg15.jpeg"
       },
       {
         id: 2,
@@ -235,7 +157,7 @@
         subtitle: "Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos",
         price: 750.00,
         category: "Tirzepatida",
-        image: "lipoless15.jpg"
+        image: "lipoless15.jpeg"
       },
       {
         id: 3,
@@ -243,7 +165,7 @@
         subtitle: "Tirzepatida 15 mg/0,6 mL — Vial Multidose 1 unidade",
         price: 730.00,
         category: "Tirzepatida",
-        image: "lipoless-md.jpg"
+        image: "lipoessmd.jpeg"
       },
       {
         id: 4,
@@ -251,7 +173,7 @@
         subtitle: "Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos",
         price: 750.00,
         category: "Tirzepatida",
-        image: "tirzec15.jpg"
+        image: "tierzec15.jpeg"
       },
       {
         id: 5,
@@ -259,7 +181,7 @@
         subtitle: "Tirzepatida 15 mg/0,5 mL — Multidose 1 unidade",
         price: 730.00,
         category: "Tirzepatida",
-        image: "tirzec-md.jpg"
+        image: "tirzecmd.jpeg"
       },
       {
         id: 6,
@@ -267,15 +189,15 @@
         subtitle: "Tirzepatida 15 mg/1,00 mL — Caixa com 4 frascos",
         price: 750.00,
         category: "Tirzepatida",
-        image: "gluconex.jpg"
+        image: "gluconex15.jpeg"
       },
       {
         id: 7,
-        name: "T36 15",
+        name: "T35 15",
         subtitle: "Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos",
         price: 750.00,
         category: "Tirzepatida",
-        image: "t36.jpg"
+        image: "t3515.jpeg"
       },
       {
         id: 8,
@@ -283,7 +205,7 @@
         subtitle: "Tirzepatida — Caixa com 4 frascos",
         price: 750.00,
         category: "Tirzepatida",
-        image: "tirzedral.jpg"
+        image: "tirzedral15.jpeg"
       },
       {
         id: 9,
@@ -291,7 +213,7 @@
         subtitle: "Tirzepatida Gold Series 15 mg/0,5 mL — Caixa com 4 frascos",
         price: 750.00,
         category: "Tirzepatida",
-        image: "lipoland.jpg"
+        image: "lipoland15.jpeg"
       },
       {
         id: 10,
@@ -299,7 +221,7 @@
         subtitle: "TriActive Metabolic Complex — Caixa com 60 comprimidos",
         price: 1050.00,
         category: "Retratrutide",
-        image: "retratrutide-natural.jpg"
+        image: "retratutide.jpeg"
       },
       {
         id: 11,
@@ -307,7 +229,7 @@
         subtitle: "Veltrane Gold 90 mg / 6 mL (15 mg/mL) — Injeção Subcutânea",
         price: 850.00,
         category: "Retratrutide",
-        image: "retratrutide-veltrane.jpg"
+        image: "veltranegold15.jpeg"
       },
       {
         id: 12,
@@ -315,7 +237,7 @@
         subtitle: "Fórmula de Suporte Hepatobiliar Especializado",
         price: 140.00,
         category: "Complementos",
-        image: "rowachol.jpg"
+        image: "rowachol.jpeg"
       },
       {
         id: 13,
@@ -323,21 +245,12 @@
         subtitle: "Fórmula de Suporte Renal e Otimização Orgânica",
         price: 135.00,
         category: "Complementos",
-        image: "rowatinex.jpg"
+        image: "rowatinex.jpeg"
       }
     ];
 
-    // CARREGAR DADOS SALVOS
-    let appConfig = JSON.parse(localStorage.getItem('ferrari_appConfig')) || defaultAppConfig;
-    let products = JSON.parse(localStorage.getItem('ferrari_products')) || defaultProducts;
-
     let cart = [];
     let activeCategory = 'todos';
-
-    function getImageSrc(img) {
-      if (!img) return 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80';
-      return img;
-    }
 
     function renderProducts(itemsToRender = products) {
       const container = document.getElementById('productsGrid');
@@ -355,12 +268,11 @@
       }
 
       filtered.forEach(p => {
-        const imgSrc = getImageSrc(p.image);
         const card = document.createElement('div');
         card.className = "bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group";
         card.innerHTML = `
           <div class="relative bg-gray-50 p-4 aspect-square flex items-center justify-center overflow-hidden">
-            <img src="${imgSrc}" alt="${p.name}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80';" class="object-contain max-h-full max-w-full group-hover:scale-105 transition-transform duration-300">
+            <img src="${p.image}" alt="${p.name}" class="object-contain max-h-full max-w-full group-hover:scale-105 transition-transform duration-300">
             <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold text-gray-700 shadow-sm uppercase tracking-wider">${p.category}</span>
           </div>
           <div class="p-5 flex-1 flex flex-col justify-between">
@@ -436,11 +348,10 @@
         container.innerHTML = `<div class="text-center py-12 text-gray-400 text-sm">Seu carrinho está vazio.</div>`;
       } else {
         cart.forEach(item => {
-          const imgSrc = getImageSrc(item.image);
           const div = document.createElement('div');
           div.className = "flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100";
           div.innerHTML = `
-            <img src="${imgSrc}" class="w-12 h-12 object-contain rounded-lg bg-white p-1" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80';">
+            <img src="${item.image}" class="w-12 h-12 object-contain rounded-lg bg-white p-1">
             <div class="flex-1">
               <h4 class="font-bold text-xs text-gray-800">${item.name}</h4>
               <span class="text-xs font-semibold text-brand-600">R$ ${(item.price * item.qty).toLocaleString('pt-BR', {minimumFractionDigits:2})}</span>
@@ -491,116 +402,6 @@
 
       const url = `https://wa.me/${appConfig.whatsappNumber}?text=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
-    }
-
-    function openAdminLogin() {
-      document.getElementById('adminModal').classList.remove('hidden');
-      document.getElementById('adminLoginSection').classList.remove('hidden');
-      document.getElementById('adminContentSection').classList.add('hidden');
-      document.getElementById('adminFooterSection').classList.add('hidden');
-      document.getElementById('adminPasswordInput').value = '';
-    }
-
-    function closeAdminModal() {
-      document.getElementById('adminModal').classList.add('hidden');
-    }
-
-    function authenticateAdmin() {
-      const pass = document.getElementById('adminPasswordInput').value;
-      if (pass === appConfig.adminPassword) {
-        document.getElementById('adminLoginSection').classList.add('hidden');
-        document.getElementById('adminContentSection').classList.remove('hidden');
-        document.getElementById('adminFooterSection').classList.remove('hidden');
-        loadAdminFields();
-      } else {
-        alert('Senha incorreta!');
-      }
-    }
-
-    function loadAdminFields() {
-      document.getElementById('adminWhatsappNumber').value = appConfig.whatsappNumber;
-      document.getElementById('adminWhatsappTemplate').value = appConfig.whatsappTemplate;
-      renderAdminProductsList();
-    }
-
-    function renderAdminProductsList() {
-      const container = document.getElementById('adminProductsList');
-      container.innerHTML = '';
-
-      products.forEach(p => {
-        const imgSrc = getImageSrc(p.image);
-        const div = document.createElement('div');
-        div.className = "bg-gray-50 p-3 rounded-xl border border-gray-200 flex flex-col gap-2 text-xs";
-        div.innerHTML = `
-          <div class="flex items-center gap-2">
-            <img src="${imgSrc}" class="w-10 h-10 object-contain bg-white rounded border" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80';">
-            <input type="text" value="${p.name}" onchange="updateProductField(${p.id}, 'name', this.value)" class="flex-1 p-1.5 border rounded font-bold" placeholder="Nome do Produto">
-            <input type="number" value="${p.price}" onchange="updateProductField(${p.id}, 'price', parseFloat(this.value))" class="w-24 p-1.5 border rounded font-bold text-right" placeholder="Preço">
-            <button onclick="removeProduct(${p.id})" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button>
-          </div>
-          <div class="flex gap-2">
-            <input type="text" value="${p.subtitle}" onchange="updateProductField(${p.id}, 'subtitle', this.value)" class="flex-1 p-1 border rounded text-gray-600" placeholder="Descrição/Subtítulo">
-            <input type="text" value="${p.image}" onchange="updateProductField(${p.id}, 'image', this.value)" class="flex-1 p-1 border rounded text-gray-600" placeholder="Nome da Imagem (ex: tg15.jpg)">
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function updateProductField(id, field, value) {
-      const p = products.find(prod => prod.id === id);
-      if (p) p[field] = value;
-      renderProducts();
-    }
-
-    function removeProduct(id) {
-      if(confirm('Deseja excluir este produto?')) {
-        products = products.filter(p => p.id !== id);
-        renderAdminProductsList();
-        renderProducts();
-      }
-    }
-
-    function addNewProductPrompt() {
-      const newP = {
-        id: Date.now(),
-        name: "Novo Produto",
-        subtitle: "Descrição do produto",
-        price: 100.00,
-        category: "Tirzepatida",
-        image: "produto.jpg"
-      };
-      products.push(newP);
-      renderAdminProductsList();
-      renderProducts();
-    }
-
-    function switchAdminTab(tab) {
-      document.getElementById('tabProducts').classList.add('hidden');
-      document.getElementById('tabWhatsapp').classList.add('hidden');
-
-      document.getElementById('tabBtnProducts').className = "pb-2 text-sm font-bold text-gray-500";
-      document.getElementById('tabBtnWhatsapp').className = "pb-2 text-sm font-bold text-gray-500";
-
-      if (tab === 'products') {
-        document.getElementById('tabProducts').classList.remove('hidden');
-        document.getElementById('tabBtnProducts').className = "pb-2 text-sm font-bold border-b-2 border-brand-600 text-brand-600";
-      } else if (tab === 'whatsapp') {
-        document.getElementById('tabWhatsapp').classList.remove('hidden');
-        document.getElementById('tabBtnWhatsapp').className = "pb-2 text-sm font-bold border-b-2 border-brand-600 text-brand-600";
-      }
-    }
-
-    function saveAllChangesLocally() {
-      appConfig.whatsappNumber = document.getElementById('adminWhatsappNumber').value.trim();
-      appConfig.whatsappTemplate = document.getElementById('adminWhatsappTemplate').value;
-
-      localStorage.setItem('ferrari_appConfig', JSON.stringify(appConfig));
-      localStorage.setItem('ferrari_products', JSON.stringify(products));
-
-      alert("Alterações salvas com sucesso!");
-      closeAdminModal();
-      renderProducts();
     }
 
     renderProducts();
