@@ -1,961 +1,697 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full bg-slate-50">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="pageTitle">PharmaPrime | Catálogo Oficial de Alta Performance</title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ferrari Farm — Saúde & Alta Performance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d'
             }
+          }
         }
-    </script>
-    
-    <!-- Google Fonts & FontAwesome Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        /* Scrollbar customizada */
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
-        
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Modal Animations */
-        .modal-animate-enter { animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes modalIn {
-            from { opacity: 0; transform: translateY(100%); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @media (min-width: 640px) {
-            @keyframes modalIn {
-                from { opacity: 0; transform: scale(0.95); }
-                to { opacity: 1; transform: scale(1); }
-            }
-        }
-    </style>
+      }
+    }
+  </script>
 </head>
-<body class="h-full flex flex-col text-slate-800 antialiased bg-slate-50 pb-20 md:pb-0">
+<body class="bg-gray-50 text-gray-800 antialiased font-sans min-h-screen flex flex-col">
 
-    <div id="devBar" class="hidden bg-amber-500 text-amber-950 px-4 py-2 text-xs font-bold flex justify-between items-center sticky top-0 z-50 shadow-md">
-        <div class="flex items-center gap-2 truncate">
-            <i class="fa-solid fa-user-shield text-sm"></i>
-            <span class="truncate">MODO ADMIN ATIVO — Edite produtos, troque fotos e personalize a mensagem do WhatsApp.</span>
+  <!-- Header / Navbar -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-2 cursor-pointer" onclick="filterCategory('todos')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+          <i class="fa-solid fa-leaf text-xl"></i>
         </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-brand-800 to-brand-600 bg-clip-text text-transparent">Ferrari Farm</span>
+          <span class="block text-[10px] uppercase font-bold text-gray-400 tracking-wider">Saúde & Atendimento Exclusivo</span>
+        </div>
+      </div>
+
+      <div class="hidden md:flex flex-1 max-w-md mx-4">
+        <div class="relative w-full">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Buscar Tirzepatida, Retratrutide..." class="w-full pl-9 pr-4 py-2 bg-gray-100 border border-transparent rounded-full text-sm focus:outline-none focus:bg-white focus:border-brand-500 transition">
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button onclick="toggleCartModal()" class="relative p-2.5 rounded-xl bg-gray-100 text-gray-700 hover:bg-brand-50 hover:text-brand-600 transition">
+          <i class="fa-solid fa-shopping-bag text-lg"></i>
+          <span id="cartBadge" class="hidden absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] font-bold w-5 h-5 rounded-full items-center justify-center border-2 border-white">0</span>
+        </button>
+
+        <button onclick="openAdminLogin()" title="Painel de Desenvolvedor" class="p-2.5 rounded-xl bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition">
+          <i class="fa-solid fa-sliders text-lg"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Banner Informativo -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+    <div class="bg-gradient-to-r from-gray-900 via-brand-900 to-gray-900 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
+      <div class="relative z-10 max-w-2xl">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 text-xs font-semibold border border-brand-500/30 mb-3">
+          <i class="fa-solid fa-truck-fast"></i> Envio Discreto & Seguro para todo o Brasil
+        </span>
+        <h1 class="text-2xl md:text-4xl font-extrabold tracking-tight mb-2">Catálogo de Otimização Metabólica & Alta Performance</h1>
+        <p class="text-gray-300 text-sm md:text-base">Compra direta com atendimento humanizado no WhatsApp. Entregas garantidas e embalagem 100% discreta.</p>
+      </div>
+      <div class="absolute -right-10 -bottom-10 opacity-10 text-brand-400">
+        <i class="fa-solid fa-shield-halved text-[220px]"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filtros e Busca Mobile -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <div class="md:hidden mb-6">
+      <div class="relative w-full">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+        <input type="text" id="mobileSearchInput" oninput="handleMobileSearch()" placeholder="Buscar produtos..." class="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-500 shadow-sm">
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 no-scrollbar">
+        <button onclick="filterCategory('todos')" class="cat-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition bg-brand-600 text-white shadow-sm shadow-brand-500/30" data-cat="todos">Todos</button>
+        <button onclick="filterCategory('Tirzepatida')" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-gray-600 border border-gray-200 hover:border-gray-300 transition" data-cat="Tirzepatida">Tirzepatida</button>
+        <button onclick="filterCategory('Retratrutide')" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-gray-600 border border-gray-200 hover:border-gray-300 transition" data-cat="Retratrutide">Retratrutide</button>
+        <button onclick="filterCategory('Complementos')" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-gray-600 border border-gray-200 hover:border-gray-300 transition" data-cat="Complementos">Complementos</button>
+      </div>
+      <span id="productCount" class="text-xs text-gray-500 font-medium">Exibindo 0 produtos</span>
+    </div>
+
+    <!-- Grid de Produtos -->
+    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="bg-white border-t border-gray-200 mt-12 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-xs text-gray-500">© 2026 Ferrari Farm. Todos os direitos reservados.</p>
+      <div class="flex items-center gap-4 text-xs font-medium text-gray-500">
+        <button onclick="openAdminLogin()" class="hover:text-brand-600 transition flex items-center gap-1">
+          <i class="fa-solid fa-code"></i> Painel GitHub / Admin
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal do Carrinho -->
+  <div id="cartModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex justify-end">
+    <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl transition-transform duration-300">
+      <div class="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+        <h3 class="font-bold text-gray-800 flex items-center gap-2">
+          <i class="fa-solid fa-shopping-bag text-brand-600"></i> Seu Carrinho
+        </h3>
+        <button onclick="toggleCartModal()" class="w-8 h-8 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+
+      <div class="p-4 border-t border-gray-100 bg-gray-50 space-y-3">
+        <div class="flex justify-between items-center font-bold text-gray-800 text-lg">
+          <span>Total:</span>
+          <span id="cartTotal" class="text-brand-600">R$ 0,00</span>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">Seu Nome para Atendimento:</label>
+          <input type="text" id="clientNameInput" placeholder="Ex: João Silva" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-brand-500">
+        </div>
+        <button onclick="sendOrderToWhatsApp()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-500/20 flex items-center justify-center gap-2 transition">
+          <i class="fa-brands fa-whatsapp text-xl"></i> Finalizar Pedido no WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Admin / Desenvolvedor -->
+  <div id="adminModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <!-- Topo Modal Admin -->
+      <div class="p-4 bg-gray-900 text-white flex items-center justify-between">
         <div class="flex items-center gap-2">
-            <button onclick="openDevSettingsModal()" class="bg-amber-900 text-white px-3 py-1 rounded-lg text-[11px] hover:bg-black transition flex items-center gap-1">
-                <i class="fa-solid fa-sliders"></i> Ajustes WhatsApp / Loja
-            </button>
-            <button onclick="openProductEditor()" class="bg-brand-800 text-white px-3 py-1 rounded-lg text-[11px] hover:bg-black transition flex items-center gap-1">
-                <i class="fa-solid fa-plus"></i> Novo Produto
-            </button>
-            <button onclick="toggleDevMode(false)" class="bg-amber-950/80 text-white px-2.5 py-1 rounded-lg text-[11px] hover:bg-black transition">
-                Sair
-            </button>
+          <i class="fa-solid fa-laptop-code text-brand-400"></i>
+          <h3 class="font-bold">Painel do Desenvolvedor & GitHub</h3>
         </div>
-    </div>
-
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
-            
-            <!-- Brand Logo -->
-            <a href="#" class="flex items-center gap-2.5 group">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-700 to-brand-500 text-white flex items-center justify-center font-extrabold text-xl shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
-                    <i class="fa-solid fa-vial-circle-check text-lg"></i>
-                </div>
-                <div class="flex flex-col">
-                    <span id="headerBrandName" class="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 leading-none">
-                        Pharma<span class="text-brand-600">Prime</span>
-                    </span>
-                    <span class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase mt-0.5">Saúde & Atendimento Exclusivo</span>
-                </div>
-            </a>
-
-            <!-- Search Desktop -->
-            <div class="hidden sm:flex flex-1 max-w-md mx-4 relative">
-                <input type="text" id="desktopSearchInput" oninput="handleSearch(this.value)" placeholder="Buscar Tirzepatida, Lipoless, Retratrutide..." class="w-full pl-10 pr-4 py-2 bg-slate-100 border border-transparent rounded-2xl text-xs focus:bg-white focus:border-brand-500 focus:outline-none transition">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
-            </div>
-
-            <!-- Actions Header -->
-            <div class="flex items-center gap-2">
-                <button onclick="toggleCartModal(true)" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-2xl bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand-600 transition font-semibold text-xs relative">
-                    <i class="fa-solid fa-bag-shopping text-base"></i>
-                    <span>Carrinho</span>
-                    <span id="desktopCartBadge" class="bg-brand-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
-                </button>
-
-                <!-- Admin Access Modal Trigger -->
-                <button onclick="triggerDevAccess()" title="Painel Admin" class="p-2.5 rounded-2xl bg-slate-100 text-slate-500 hover:text-brand-600 hover:bg-brand-50 transition">
-                    <i class="fa-solid fa-sliders text-base"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Mobile Search Header -->
-        <div class="sm:hidden px-4 pb-3">
-            <div class="relative">
-                <input type="text" id="mobileSearchInput" oninput="handleSearch(this.value)" placeholder="Buscar Tirzepatida, Lipoless, Retratrutide..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-transparent rounded-xl text-xs focus:bg-white focus:border-brand-500 focus:outline-none transition">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-            </div>
-        </div>
-    </header>
-
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
-
-        <!-- Hero Banner Promo -->
-        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-brand-900 to-slate-900 text-white p-5 sm:p-8 shadow-xl">
-            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-brand-500/20 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="relative z-10 max-w-xl space-y-2">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-400/30 text-brand-300 text-[11px] font-bold uppercase tracking-wider">
-                    <i class="fa-solid fa-shield-halved text-brand-400"></i> Envio Discreto & Seguro para todo o Brasil
-                </span>
-                <h1 class="text-xl sm:text-3xl font-extrabold tracking-tight leading-tight">
-                    Catálogo de <span class="text-brand-400">Otimização Metabólica & Alta Performance</span>
-                </h1>
-                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                    Compre direto com atendimento no WhatsApp. Entregas garantidas e embalagem 100% discreta.
-                </p>
-            </div>
-        </div>
-
-        <!-- Categories horizontal bar -->
-        <div class="space-y-3">
-            <div class="flex items-center justify-between">
-                <h2 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-fire text-amber-500"></i> Produtos Disponíveis
-                </h2>
-                <span id="productCountBadge" class="text-xs text-slate-400 font-medium">Exibindo 0 produtos</span>
-            </div>
-
-            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="categoryContainer">
-                <!-- Dynamically rendered categories -->
-            </div>
-        </div>
-
-        <!-- Products Grid -->
-        <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
-            <!-- Dynamically rendered products -->
-        </div>
-
-        <!-- Empty Search State -->
-        <div id="emptyState" class="hidden text-center py-12 space-y-3">
-            <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-2xl">
-                <i class="fa-solid fa-box-open"></i>
-            </div>
-            <p class="text-sm font-bold text-slate-700">Nenhum produto encontrado</p>
-            <p class="text-xs text-slate-400">Tente buscar por outro termo ou selecione a categoria "Todos".</p>
-        </div>
-
-    </main>
-
-    <nav class="sm:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200/80 z-40 px-6 py-2 flex items-center justify-between shadow-lg">
-        <a href="#" class="flex flex-col items-center gap-1 text-brand-600">
-            <i class="fa-solid fa-house text-base"></i>
-            <span class="text-[10px] font-bold">Início</span>
-        </a>
-        <button onclick="toggleCartModal(true)" class="flex flex-col items-center gap-1 text-slate-500 hover:text-brand-600 relative">
-            <div class="relative">
-                <i class="fa-solid fa-bag-shopping text-base"></i>
-                <span id="mobileCartBadge" class="absolute -top-1.5 -right-2.5 bg-brand-600 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center hidden">0</span>
-            </div>
-            <span class="text-[10px] font-medium">Carrinho</span>
+        <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-xl"></i>
         </button>
-        <button onclick="openWhatsAppDirect()" class="flex flex-col items-center gap-1 text-slate-500 hover:text-emerald-600">
-            <i class="fa-brands fa-whatsapp text-base text-emerald-500"></i>
-            <span class="text-[10px] font-medium">Atendimento</span>
+      </div>
+
+      <!-- Formulário de Login Admin -->
+      <div id="adminLoginSection" class="p-8 text-center space-y-4 max-w-sm mx-auto w-full my-auto">
+        <i class="fa-solid fa-lock text-4xl text-gray-300"></i>
+        <h4 class="font-bold text-gray-800">Acesso Restrito</h4>
+        <p class="text-xs text-gray-500">Insira a senha de desenvolvedor para editar e salvar no GitHub.</p>
+        <input type="password" id="adminPasswordInput" placeholder="Senha do Admin" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-center focus:outline-none focus:border-brand-500">
+        <button onclick="authenticateAdmin()" class="w-full bg-gray-900 text-white font-semibold py-2.5 rounded-xl hover:bg-black transition">Entrar</button>
+      </div>
+
+      <!-- Conteúdo Admin Logado -->
+      <div id="adminContentSection" class="hidden flex-1 overflow-y-auto p-6 space-y-6">
+        
+        <!-- Abas de Edição -->
+        <div class="flex border-b border-gray-200 gap-4">
+          <button onclick="switchAdminTab('products')" id="tabBtnProducts" class="pb-2 text-sm font-bold border-b-2 border-brand-600 text-brand-600">Editar Produtos</button>
+          <button onclick="switchAdminTab('whatsapp')" id="tabBtnWhatsapp" class="pb-2 text-sm font-bold text-gray-500">WhatsApp & Mensagens</button>
+          <button onclick="switchAdminTab('github')" id="tabBtnGithub" class="pb-2 text-sm font-bold text-gray-500">Sincronizar com GitHub</button>
+        </div>
+
+        <!-- Aba 1: Produtos -->
+        <div id="tabProducts" class="space-y-4">
+          <div class="flex justify-between items-center">
+            <h4 class="font-bold text-gray-800">Lista de Produtos</h4>
+            <button onclick="addNewProductPrompt()" class="bg-brand-600 text-white text-xs font-semibold px-3 py-2 rounded-lg hover:bg-brand-700 transition">
+              <i class="fa-solid fa-plus"></i> Novo Produto
+            </button>
+          </div>
+          <div id="adminProductsList" class="space-y-3 max-h-[350px] overflow-y-auto pr-2"></div>
+        </div>
+
+        <!-- Aba 2: WhatsApp -->
+        <div id="tabWhatsapp" class="hidden space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Número do WhatsApp (com DDD e Código do País):</label>
+            <input type="text" id="adminWhatsappNumber" placeholder="Ex: 5511999999999" class="w-full p-2.5 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Modelo da Mensagem para WhatsApp:</label>
+            <p class="text-[11px] text-gray-500 mb-2">Use as tags: <b>{cliente}</b>, <b>{produtos}</b> e <b>{total}</b> para preenchimento dinâmico.</p>
+            <textarea id="adminWhatsappTemplate" rows="6" class="w-full p-3 border rounded-lg text-sm font-mono bg-gray-50"></textarea>
+          </div>
+        </div>
+
+        <!-- Aba 3: GitHub Integration -->
+        <div id="tabGithub" class="hidden space-y-4">
+          <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-xs text-blue-900 space-y-2">
+            <p class="font-bold flex items-center gap-1"><i class="fa-solid fa-circle-info"></i> Como Salvar Direto no GitHub:</p>
+            <p>Preencha seus dados abaixo. Quando você salvar, o site fará um <b>commit automático</b> diretamente no repositório do seu GitHub e o <b>Vercel atualizará o site para todos os visitantes</b>!</p>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Usuário do GitHub:</label>
+            <input type="text" id="ghUser" placeholder="Ex: seu-usuario" class="w-full p-2.5 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Nome do Repositório no GitHub:</label>
+            <input type="text" id="ghRepo" placeholder="Ex: minha-loja" class="w-full p-2.5 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">GitHub Personal Access Token (PAT):</label>
+            <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="w-full p-2.5 border rounded-lg text-sm font-mono">
+            <span class="text-[10px] text-gray-400">Gere em: GitHub > Settings > Developer Settings > Personal Access Tokens (classic) com permissão 'repo'.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rodapé do Modal Admin -->
+      <div id="adminFooterSection" class="hidden p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+        <button onclick="closeAdminModal()" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 font-semibold">Cancelar</button>
+        <button onclick="saveAllChangesAndCommit()" id="btnSaveAll" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Salvar e Atualizar GitHub
         </button>
-        <button onclick="triggerDevAccess()" class="flex flex-col items-center gap-1 text-slate-500 hover:text-brand-600">
-            <i class="fa-solid fa-sliders text-base"></i>
-            <span class="text-[10px] font-medium">Painel Admin</span>
-        </button>
-    </nav>
-
-    <div id="cartModal" class="fixed inset-0 z-50 hidden">
-        <div onclick="toggleCartModal(false)" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"></div>
-        <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col h-full modal-animate-enter">
-            
-            <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-bag-shopping text-brand-600 text-lg"></i>
-                    <h3 class="font-extrabold text-slate-900 text-base">Seu Carrinho</h3>
-                </div>
-                <button onclick="toggleCartModal(false)" class="w-8 h-8 rounded-full bg-slate-200/60 text-slate-600 flex items-center justify-center hover:bg-slate-200 transition">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- Cart Items -->
-            <div id="cartItemsList" class="flex-1 overflow-y-auto p-4 space-y-3">
-                <!-- Cart items JS rendered -->
-            </div>
-
-            <!-- Customer Name & Checkout Footer -->
-            <div class="p-4 border-t border-slate-100 bg-slate-50 space-y-3">
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-700 mb-1">Seu Nome (Opcional):</label>
-                    <input type="text" id="customerNameInput" placeholder="Ex: João Silva" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                </div>
-
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-slate-500">Subtotal do pedido:</span>
-                    <span id="cartSubtotal" class="font-black text-lg text-slate-900">R$ 0,00</span>
-                </div>
-
-                <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-100 text-[11px] text-emerald-800 flex items-center gap-2">
-                    <i class="fa-solid fa-truck-fast text-emerald-600 text-sm"></i>
-                    <span>Envio em caixa discreta sem identificação de conteúdo.</span>
-                </div>
-
-                <button onclick="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold py-3.5 px-4 rounded-2xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2 text-sm">
-                    <i class="fa-brands fa-whatsapp text-lg"></i>
-                    <span>Enviar Pedido pelo WhatsApp</span>
-                </button>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 
-    <div id="devAuthModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-        <div onclick="closeDevAuthModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm p-6 space-y-4 modal-animate-enter z-10">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-lock text-brand-600 text-base"></i>
-                    <h3 class="font-extrabold text-slate-900 text-base">Acesso de Administrador</h3>
-                </div>
-                <button onclick="closeDevAuthModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+  <!-- Lógica da Aplicação -->
+  <script>
+    // BASE DE DADOS DOS PRODUTOS
+    let appConfig = {
+      whatsappNumber: "5500000000000",
+      whatsappTemplate: "Olá! Gostaria de fazer o pedido abaixo:\n\n*Cliente:* {cliente}\n\n*Itens do Pedido:*\n{produtos}\n\n*Valor Total:* {total}\n\nAguardo confirmação dos dados para pagamento e envio!",
+      githubUser: "",
+      githubRepo: "",
+      githubToken: "",
+      adminPassword: "admin123"
+    };
+
+    let products = [
+      {
+        id: 1,
+        name: "TG 15",
+        subtitle: "Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos",
+        price: 750.00,
+        category: "Tirzepatida",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 2,
+        name: "Lipoless 15",
+        subtitle: "Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos",
+        price: 750.00,
+        category: "Tirzepatida",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 3,
+        name: "Lipoless MD 15",
+        subtitle: "Tirzepatida 15 mg/0,6 mL — Vial Multidose 1 unidade",
+        price: 730.00,
+        category: "Tirzepatida",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 4,
+        name: "Tirzec 15",
+        subtitle: "Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos",
+        price: 750.00,
+        category: "Tirzepatida",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 5,
+        name: "Tirzec MD",
+        subtitle: "Tirzepatida 15 mg/0,5 mL — Multidose 1 unidade",
+        price: 730.00,
+        category: "Tirzepatida",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 6,
+        name: "Gluconex 15 / Clucomax",
+        subtitle: "Tirzepatida 15 mg/1,00 mL — Caixa com 4 frascos",
+        price: 750.00,
+        category: "Tirzepatida",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 7,
+        name: "T36 15",
+        subtitle: "Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos",
+        price: 750.00,
+        category: "Tirzepatida",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 8,
+        name: "Tirzedral 15",
+        subtitle: "Tirzepatida — Caixa com 4 frascos",
+        price: 750.00,
+        category: "Tirzepatida",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 9,
+        name: "Lipoland 15",
+        subtitle: "Tirzepatida Gold Series 15 mg/0,5 mL — Caixa com 4 frascos",
+        price: 750.00,
+        category: "Tirzepatida",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 10,
+        name: "Retratrutide Natural",
+        subtitle: "TriActive Metabolic Complex — Caixa com 60 comprimidos",
+        price: 1050.00,
+        category: "Retratrutide",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 11,
+        name: "Retratrutide Veltrane Gold",
+        subtitle: "Veltrane Gold 90 mg / 6 mL (15 mg/mL) — Injeção Subcutânea",
+        price: 850.00,
+        category: "Retratrutide",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 12,
+        name: "Rowa Chol",
+        subtitle: "Fórmula de Suporte Hepatobiliar Especializado",
+        price: 140.00,
+        category: "Complementos",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 13,
+        name: "Rowa Tinex",
+        subtitle: "Fórmula de Suporte Renal e Otimização Orgânica",
+        price: 135.00,
+        category: "Complementos",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      }
+    ];
+
+    let cart = [];
+    let activeCategory = 'todos';
+
+    // RENDERIZAR PRODUTOS
+    function renderProducts(itemsToRender = products) {
+      const container = document.getElementById('productsGrid');
+      container.innerHTML = '';
+
+      const filtered = activeCategory === 'todos' 
+        ? itemsToRender 
+        : itemsToRender.filter(p => p.category.toLowerCase() === activeCategory.toLowerCase());
+
+      document.getElementById('productCount').innerText = `Exibindo ${filtered.length} produto(s)`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">Nenhum produto encontrado.</div>`;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group";
+        card.innerHTML = `
+          <div class="relative bg-gray-50 p-4 aspect-square flex items-center justify-center overflow-hidden">
+            <img src="${p.image}" alt="${p.name}" class="object-contain max-h-full max-w-full group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold text-gray-700 shadow-sm uppercase tracking-wider">${p.category}</span>
+          </div>
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-bold text-gray-800 text-base mb-1 group-hover:text-brand-600 transition">${p.name}</h3>
+              <p class="text-xs text-gray-500 line-clamp-2 mb-4 leading-relaxed">${p.subtitle}</p>
             </div>
-            <p class="text-xs text-slate-500">Digite a senha para personalizar preços, imagens e o modelo de mensagem do WhatsApp.</p>
-            <form onsubmit="handleDevLogin(event)" class="space-y-3">
-                <div>
-                    <input type="password" id="devPasswordInput" placeholder="Senha Admin (Padrão: admin123)" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
-                </div>
-                <p id="devLoginError" class="text-red-500 text-[11px] hidden font-semibold">Senha incorreta. Tente novamente.</p>
-                <button type="submit" class="w-full bg-brand-600 text-white font-bold py-3 rounded-xl text-xs hover:bg-brand-700 transition shadow-md shadow-brand-600/20">
-                    Entrar no Painel Admin
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <div id="productEditorModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div onclick="closeProductEditorModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-5 sm:p-6 space-y-4 modal-animate-enter z-10 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 id="editorModalTitle" class="font-extrabold text-slate-900 text-base">Editar Produto</h3>
-                <button onclick="closeProductEditorModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+            <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+              <div>
+                <span class="text-[10px] text-gray-400 font-semibold block uppercase">Preço</span>
+                <span class="text-lg font-extrabold text-gray-900">R$ ${p.price.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+              </div>
+              <button onclick="addToCart(${p.id})" class="bg-brand-50 hover:bg-brand-600 text-brand-700 hover:text-white font-bold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-plus"></i> Comprar
+              </button>
             </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
 
-            <form onsubmit="handleSaveProduct(event)" class="space-y-3 text-xs">
-                <input type="hidden" id="editProductId">
-                
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Nome do Produto</label>
-                    <input type="text" id="editProductName" placeholder="Ex: Tirzec 15" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
-                </div>
+    // BUSCA
+    function handleSearch() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      renderProducts(products.filter(p => p.name.toLowerCase().includes(q) || p.subtitle.toLowerCase().includes(q)));
+    }
+    function handleMobileSearch() {
+      const q = document.getElementById('mobileSearchInput').value.toLowerCase();
+      renderProducts(products.filter(p => p.name.toLowerCase().includes(q) || p.subtitle.toLowerCase().includes(q)));
+    }
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Preço Atual (R$)</label>
-                        <input type="number" step="0.01" id="editProductPrice" placeholder="0.00" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Preço Riscado (R$)</label>
-                        <input type="number" step="0.01" id="editProductOldPrice" placeholder="Opcional" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                    </div>
-                </div>
+    // FILTRO DE CATEGORIAS
+    function filterCategory(cat) {
+      activeCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if(btn.dataset.cat.toLowerCase() === cat.toLowerCase()){
+          btn.className = "cat-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition bg-brand-600 text-white shadow-sm shadow-brand-500/30";
+        } else {
+          btn.className = "cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-gray-600 border border-gray-200 hover:border-gray-300 transition";
+        }
+      });
+      renderProducts();
+    }
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Categoria</label>
-                        <input type="text" id="editProductCategory" placeholder="Ex: Injetáveis / Cápsulas" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Estoque</label>
-                        <select id="editProductInStock" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white">
-                            <option value="true">Disponível / Em Estoque</option>
-                            <option value="false">Esgotado</option>
-                        </select>
-                    </div>
-                </div>
+    // CARRINHO
+    function addToCart(id) {
+      const p = products.find(prod => prod.id === id);
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({...p, qty: 1});
+      }
+      updateCartUI();
+      toggleCartModal(true);
+    }
 
-                <!-- IMAGE SOURCE SELECTION -->
-                <div class="space-y-2 p-3 bg-slate-50 rounded-2xl border border-slate-100">
-                    <label class="block font-bold text-slate-800">Imagem do Produto (Troca rápida)</label>
-                    
-                    <div class="flex items-center gap-3">
-                        <img id="imagePreview" src="" class="w-16 h-16 rounded-xl object-cover bg-slate-200 border border-slate-200 hidden">
-                        <span id="noPreviewText" class="text-[11px] text-slate-400 italic">Nenhuma imagem carregada.</span>
-                    </div>
+    function updateCartUI() {
+      const badge = document.getElementById('cartBadge');
+      const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+      if (totalQty > 0) {
+        badge.innerText = totalQty;
+        badge.classList.remove('hidden');
+        badge.classList.add('flex');
+      } else {
+        badge.classList.add('hidden');
+        badge.classList.remove('flex');
+      }
 
-                    <div>
-                        <span class="block text-[11px] font-semibold text-slate-600 mb-1">Upload do Celular ou Computador:</span>
-                        <input type="file" id="editProductFile" accept="image/*" onchange="handleFileUpload(event)" class="block w-full text-[11px] text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-semibold file:bg-brand-100 file:text-brand-800 hover:file:bg-brand-200 cursor-pointer">
-                    </div>
+      const container = document.getElementById('cartItems');
+      container.innerHTML = '';
 
-                    <div class="text-center font-bold text-[10px] text-slate-400 uppercase tracking-widest my-1">— OU —</div>
-
-                    <div>
-                        <span class="block text-[11px] font-semibold text-slate-600 mb-1">Link/URL de Imagem Externa:</span>
-                        <input type="url" id="editProductImageUrl" placeholder="https://..." oninput="previewUrlImage(this.value)" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-xs">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Descrição do Produto</label>
-                    <textarea id="editProductDesc" rows="2" placeholder="Resumo de indicação e dosagem..." class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required></textarea>
-                </div>
-
-                <div class="pt-2 flex justify-end gap-2">
-                    <button type="button" onclick="closeProductEditorModal()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition shadow-md shadow-brand-600/20">Salvar Produto</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="devSettingsModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div onclick="closeDevSettingsModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-5 sm:p-6 space-y-4 modal-animate-enter z-10 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-gear text-brand-600 text-base"></i>
-                    <h3 class="font-extrabold text-slate-900 text-base">Configurações Gerais & WhatsApp</h3>
-                </div>
-                <button onclick="closeDevSettingsModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+      if (cart.length === 0) {
+        container.innerHTML = `<div class="text-center py-12 text-gray-400 text-sm">Seu carrinho está vazio.</div>`;
+      } else {
+        cart.forEach(item => {
+          const div = document.createElement('div');
+          div.className = "flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100";
+          div.innerHTML = `
+            <img src="${item.image}" class="w-12 h-12 object-contain rounded-lg bg-white p-1">
+            <div class="flex-1">
+              <h4 class="font-bold text-xs text-gray-800">${item.name}</h4>
+              <span class="text-xs font-semibold text-brand-600">R$ ${(item.price * item.qty).toLocaleString('pt-BR', {minimumFractionDigits:2})}</span>
             </div>
+            <div class="flex items-center border border-gray-200 bg-white rounded-lg">
+              <button onclick="changeQty(${item.id}, -1)" class="px-2 py-1 text-xs text-gray-500 hover:text-black">-</button>
+              <span class="px-2 text-xs font-bold">${item.qty}</span>
+              <button onclick="changeQty(${item.id}, 1)" class="px-2 py-1 text-xs text-gray-500 hover:text-black">+</button>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      }
 
-            <form onsubmit="handleSaveDevSettings(event)" class="space-y-3 text-xs">
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Nome da Loja</label>
-                    <input type="text" id="settingStoreName" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
-                </div>
+      const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      document.getElementById('cartTotal').innerText = `R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+    }
 
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Número do WhatsApp Recebedor (com DDD e 55)</label>
-                    <input type="text" id="settingWhatsApp" placeholder="Ex: 5511999998888" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
-                    <span class="text-[10px] text-slate-400 mt-1 block">Os pedidos do carrinho serão enviados para este WhatsApp.</span>
-                </div>
+    function changeQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.qty += delta;
+        if (item.qty <= 0) {
+          cart = cart.filter(i => i.id !== id);
+        }
+      }
+      updateCartUI();
+    }
 
-                <!-- WHATSAPP MESSAGE CUSTOMIZER -->
-                <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-100 space-y-2">
-                    <div class="flex items-center justify-between">
-                        <label class="block font-bold text-emerald-900">Modelo da Mensagem do WhatsApp</label>
-                        <span class="text-[10px] font-semibold bg-emerald-200/60 text-emerald-800 px-2 py-0.5 rounded-md">Personalizável</span>
-                    </div>
-                    <p class="text-[10px] text-emerald-700 leading-normal">
-                        Você pode usar as seguintes variáveis no seu texto:<br>
-                        <code class="font-bold">{produtos}</code> = Lista dos itens com quantidades e preços<br>
-                        <code class="font-bold">{total}</code> = Valor total calculado<br>
-                        <code class="font-bold">{cliente}</code> = Nome digitado pelo cliente
-                    </p>
-                    <textarea id="settingWaTemplate" rows="6" class="w-full p-2.5 bg-white border border-emerald-200 rounded-xl font-mono text-[11px] focus:ring-2 focus:ring-emerald-500 focus:outline-none" required></textarea>
-                </div>
+    function toggleCartModal(show = null) {
+      const modal = document.getElementById('cartModal');
+      if (show === true) modal.classList.remove('hidden');
+      else if (show === false) modal.classList.add('hidden');
+      else modal.classList.toggle('hidden');
+    }
 
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Nova Senha de Administrador</label>
-                    <input type="password" id="settingAdminPassword" placeholder="Deixe em branco para manter a atual" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                </div>
+    function sendOrderToWhatsApp() {
+      if (cart.length === 0) return alert('Seu carrinho está vazio!');
+      const name = document.getElementById('clientNameInput').value.trim() || 'Cliente';
+      
+      let itemsList = cart.map(i => `• ${i.name} (${i.qty}x) — R$ ${(i.price * i.qty).toFixed(2)}`).join('\n');
+      let total = "R$ " + cart.reduce((sum, i) => sum + (i.price * i.qty), 0).toLocaleString('pt-BR', {minimumFractionDigits: 2});
 
-                <div class="pt-2 flex justify-between items-center">
-                    <button type="button" onclick="resetToDefaults()" class="text-red-500 hover:underline font-semibold text-[11px]">Restaurar Dados Originais</button>
-                    <div class="flex gap-2">
-                        <button type="button" onclick="closeDevSettingsModal()" class="px-3.5 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold">Cancelar</button>
-                        <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition">Salvar Alterações</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+      let text = appConfig.whatsappTemplate
+        .replace('{cliente}', name)
+        .replace('{produtos}', itemsList)
+        .replace('{total}', total);
 
-    <script>
-        // System Settings Defaults
-        const DEFAULT_SETTINGS = {
-            storeName: "PharmaPrime",
-            whatsapp: "5511999999999",
-            adminPassword: "admin123",
-            waTemplate: "🛒 *NOVO PEDIDO - {loja}*\n\nOlá, gostaria de confirmar o seguinte pedido:\n\n{produtos}\n*TOTAL:* R$ {total}\n*CLIENTE:* {cliente}\n\nPor favor, envie as opções para pagamento no PIX e dados de entrega."
-        };
+      const url = `https://wa.me/${appConfig.whatsappNumber}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
 
-        // User Products List with updated prices and descriptions
-        const DEFAULT_PRODUCTS = [
-            {
-                id: 'tg-15',
-                name: 'TG 15',
-                category: 'Tirzepatida',
-                price: 750.00,
-                oldPrice: 850.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos.',
-                inStock: true
-            },
-            {
-                id: 'lipoless-15-cx',
-                name: 'Lipoless 15',
-                category: 'Tirzepatida',
-                price: 750.00,
-                oldPrice: 850.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos.',
-                inStock: true
-            },
-            {
-                id: 'lipoless-md-15',
-                name: 'Lipoless MD 15',
-                category: 'Tirzepatida',
-                price: 730.00,
-                oldPrice: 800.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Tirzepatida 15 mg/0,6 mL — Vial Multidose 1 unidade.',
-                inStock: true
-            },
-            {
-                id: 'tirzec-15-cx',
-                name: 'Tirzec 15',
-                category: 'Tirzepatida',
-                price: 750.00,
-                oldPrice: 850.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos.',
-                inStock: true
-            },
-            {
-                id: 'tirzec-md',
-                name: 'Tirzec MD',
-                category: 'Tirzepatida',
-                price: 730.00,
-                oldPrice: 800.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Tirzepatida 15 mg/0,5 mL — 1 unidade.',
-                inStock: true
-            },
-            {
-                id: 'gluconex-15',
-                name: 'Gluconex 15 / Clucomax',
-                category: 'Tirzepatida',
-                price: 750.00,
-                oldPrice: 850.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Tirzepatida 15 mg/1,00 mL — Caixa com 4 frascos.',
-                inStock: true
-            },
-            {
-                id: 't36-15',
-                name: 'T36 15',
-                category: 'Tirzepatida',
-                price: 750.00,
-                oldPrice: 850.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Tirzepatida 15 mg/0,5 mL — Caixa com 4 frascos.',
-                inStock: true
-            },
-            {
-                id: 'tirzedral',
-                name: 'Tirzedral',
-                category: 'Tirzepatida',
-                price: 750.00,
-                oldPrice: 850.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Tirzepatida — Caixa com 4 frascos.',
-                inStock: true
-            },
-            {
-                id: 'lipoland-15',
-                name: 'Lipoland 15',
-                category: 'Tirzepatida',
-                price: 750.00,
-                oldPrice: 850.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Tirzepatida Gold Series 15 mg/0,5 mL — Caixa com 4 frascos.',
-                inStock: true
-            },
-            {
-                id: 'retratrutide-natural',
-                name: 'Retratrutide Natural',
-                category: 'Retatrutide',
-                price: 1050.00,
-                oldPrice: 1200.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'TriActive Metabolic Complex — Caixa com 4.',
-                inStock: true
-            },
-            {
-                id: 'retratrutide-veltrane',
-                name: 'Retratrutide Veltrane Gold',
-                category: 'Retatrutide',
-                price: 850.00,
-                oldPrice: 950.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: '90 mg | 6 ml | 15 mg/ml — Caixa com 4.',
-                inStock: true
-            },
-            {
-                id: 'rowa-chol',
-                name: 'Rowa Chol',
-                category: 'Complementos',
-                price: 140.00,
-                oldPrice: 160.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Fórmula de suporte hepatobiliar e digestivo.',
-                inStock: true
-            },
-            {
-                id: 'rowa-tinex',
-                name: 'Rowa Tinex',
-                category: 'Complementos',
-                price: 135.00,
-                oldPrice: 155.00,
-                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Suporte especializado para vias urinárias e renais.',
-                inStock: true
-            }
-        ];
+    // PAINEL ADMIN / DEVELOPER
+    function openAdminLogin() {
+      document.getElementById('adminModal').classList.remove('hidden');
+    }
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.add('hidden');
+    }
 
-        // Global State Variables
-        let settings = JSON.parse(localStorage.getItem('pharma_settings_v2')) || DEFAULT_SETTINGS;
-        let products = JSON.parse(localStorage.getItem('pharma_products_v2')) || DEFAULT_PRODUCTS;
-        let cart = JSON.parse(localStorage.getItem('pharma_cart_v2')) || [];
-        let isDevMode = false;
-        let selectedCategory = 'Todos';
-        let searchQuery = '';
-        let currentUploadedBase64 = null;
+    function authenticateAdmin() {
+      const pass = document.getElementById('adminPasswordInput').value;
+      if (pass === appConfig.adminPassword) {
+        document.getElementById('adminLoginSection').classList.add('hidden');
+        document.getElementById('adminContentSection').classList.remove('hidden');
+        document.getElementById('adminFooterSection').classList.remove('hidden');
+        loadAdminFields();
+      } else {
+        alert('Senha incorreta!');
+      }
+    }
 
-        // Initialize on DOM Load
-        window.addEventListener('DOMContentLoaded', () => {
-            renderHeader();
-            renderCategories();
-            renderProducts();
-            updateCartUI();
+    function loadAdminFields() {
+      document.getElementById('adminWhatsappNumber').value = appConfig.whatsappNumber;
+      document.getElementById('adminWhatsappTemplate').value = appConfig.whatsappTemplate;
+      document.getElementById('ghUser').value = appConfig.githubUser || '';
+      document.getElementById('ghRepo').value = appConfig.githubRepo || '';
+      document.getElementById('ghToken').value = appConfig.githubToken || '';
+
+      renderAdminProductsList();
+    }
+
+    function renderAdminProductsList() {
+      const container = document.getElementById('adminProductsList');
+      container.innerHTML = '';
+
+      products.forEach(p => {
+        const div = document.createElement('div');
+        div.className = "bg-gray-50 p-3 rounded-xl border border-gray-200 flex flex-col gap-2 text-xs";
+        div.innerHTML = `
+          <div class="flex items-center gap-2">
+            <img src="${p.image}" class="w-10 h-10 object-contain bg-white rounded border">
+            <input type="text" value="${p.name}" onchange="updateProductField(${p.id}, 'name', this.value)" class="flex-1 p-1.5 border rounded font-bold">
+            <input type="number" value="${p.price}" onchange="updateProductField(${p.id}, 'price', parseFloat(this.value))" class="w-24 p-1.5 border rounded font-bold text-right">
+            <button onclick="removeProduct(${p.id})" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" value="${p.subtitle}" onchange="updateProductField(${p.id}, 'subtitle', this.value)" class="flex-1 p-1 border rounded text-gray-600" placeholder="Descrição/Subtítulo">
+            <input type="text" value="${p.image}" onchange="updateProductField(${p.id}, 'image', this.value)" class="flex-1 p-1 border rounded text-gray-600" placeholder="URL da Imagem">
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function updateProductField(id, field, value) {
+      const p = products.find(prod => prod.id === id);
+      if (p) p[field] = value;
+      renderProducts();
+    }
+
+    function removeProduct(id) {
+      if(confirm('Deseja excluir este produto?')) {
+        products = products.filter(p => p.id !== id);
+        renderAdminProductsList();
+        renderProducts();
+      }
+    }
+
+    function addNewProductPrompt() {
+      const newP = {
+        id: Date.now(),
+        name: "Novo Produto",
+        subtitle: "Descrição do produto",
+        price: 100.00,
+        category: "Tirzepatida",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80"
+      };
+      products.push(newP);
+      renderAdminProductsList();
+      renderProducts();
+    }
+
+    function switchAdminTab(tab) {
+      document.getElementById('tabProducts').classList.add('hidden');
+      document.getElementById('tabWhatsapp').classList.add('hidden');
+      document.getElementById('tabGithub').classList.add('hidden');
+
+      document.getElementById('tabBtnProducts').className = "pb-2 text-sm font-bold text-gray-500";
+      document.getElementById('tabBtnWhatsapp').className = "pb-2 text-sm font-bold text-gray-500";
+      document.getElementById('tabBtnGithub').className = "pb-2 text-sm font-bold text-gray-500";
+
+      if (tab === 'products') {
+        document.getElementById('tabProducts').classList.remove('hidden');
+        document.getElementById('tabBtnProducts').className = "pb-2 text-sm font-bold border-b-2 border-brand-600 text-brand-600";
+      } else if (tab === 'whatsapp') {
+        document.getElementById('tabWhatsapp').classList.remove('hidden');
+        document.getElementById('tabBtnWhatsapp').className = "pb-2 text-sm font-bold border-b-2 border-brand-600 text-brand-600";
+      } else if (tab === 'github') {
+        document.getElementById('tabGithub').classList.remove('hidden');
+        document.getElementById('tabBtnGithub').className = "pb-2 text-sm font-bold border-b-2 border-brand-600 text-brand-600";
+      }
+    }
+
+    // SALVAR E FAZER COMMIT DIRETO NO GITHUB VIA API
+    async function saveAllChangesAndCommit() {
+      appConfig.whatsappNumber = document.getElementById('adminWhatsappNumber').value.trim();
+      appConfig.whatsappTemplate = document.getElementById('adminWhatsappTemplate').value;
+      appConfig.githubUser = document.getElementById('ghUser').value.trim();
+      appConfig.githubRepo = document.getElementById('ghRepo').value.trim();
+      appConfig.githubToken = document.getElementById('ghToken').value.trim();
+
+      if (!appConfig.githubUser || !appConfig.githubRepo || !appConfig.githubToken) {
+        alert("Atenção: Preencha os dados do GitHub para salvar permanentemente no repositório!");
+        switchAdminTab('github');
+        return;
+      }
+
+      const btn = document.getElementById('btnSaveAll');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Enviando para o GitHub...`;
+
+      try {
+        // Gerar o HTML atualizado em memória
+        let currentHTML = document.documentElement.outerHTML;
+
+        // Substituir dados no código fonte
+        const updatedConfigJS = `let appConfig = ${JSON.stringify(appConfig, null, 2)};`;
+        const updatedProductsJS = `let products = ${JSON.stringify(products, null, 2)};`;
+
+        currentHTML = currentHTML.replace(/let appConfig = \{[\s\S]*?\};/, updatedConfigJS);
+        currentHTML = currentHTML.replace(/let products = \[[\s\S]*?\];/, updatedProductsJS);
+
+        // API do GitHub: Pegar SHA do arquivo atual
+        const filePath = "index.html";
+        const apiUrl = `https://api.github.com/repos/${appConfig.githubUser}/${appConfig.githubRepo}/contents/${filePath}`;
+        
+        let sha = "";
+        const getRes = await fetch(apiUrl, {
+          headers: { "Authorization": `token ${appConfig.githubToken}` }
         });
 
-        function renderHeader() {
-            document.getElementById('pageTitle').textContent = `${settings.storeName} | Catálogo Oficial`;
-            document.getElementById('headerBrandName').innerHTML = `${settings.storeName.substring(0, 6)}<span class="text-brand-600">${settings.storeName.substring(6) || ''}</span>`;
-            document.getElementById('devBar').classList.toggle('hidden', !isDevMode);
+        if (getRes.ok) {
+          const fileData = await getRes.json();
+          sha = fileData.sha;
         }
 
-        function renderCategories() {
-            const categories = ['Todos', ...new Set(products.map(p => p.category))];
-            const container = document.getElementById('categoryContainer');
-            
-            container.innerHTML = categories.map(cat => `
-                <button onclick="selectCategory('${cat}')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
-                    selectedCategory === cat 
-                    ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' 
-                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80'
-                }">
-                    ${cat}
-                </button>
-            `).join('');
+        // Fazer Commit via API
+        const contentEncoded = btoa(unescape(encodeURIComponent("<!DOCTYPE html>\n<html lang=\"pt-BR\">\n" + document.documentElement.innerHTML + "\n</html>")));
+
+        const putRes = await fetch(apiUrl, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${appConfig.githubToken}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message: "Atualização de produtos/preços pelo Painel de Admin",
+            content: contentEncoded,
+            sha: sha || undefined
+          })
+        });
+
+        if (putRes.ok) {
+          alert(" Sucesso! Alterações salvas com sucesso no GitHub. O Vercel atualizará o site em instantes!");
+          closeAdminModal();
+          renderProducts();
+        } else {
+          const errData = await putRes.json();
+          alert(`Erro ao salvar no GitHub: ${errData.message}`);
         }
 
-        function renderProducts() {
-            const grid = document.getElementById('productGrid');
-            const emptyState = document.getElementById('emptyState');
+      } catch (err) {
+        console.error(err);
+        alert("Ocorreu um erro ao comunicar com a API do GitHub.");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Salvar e Atualizar GitHub`;
+      }
+    }
 
-            const filtered = products.filter(p => {
-                const matchesCategory = selectedCategory === 'Todos' || p.category === selectedCategory;
-                const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                      p.description.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchesCategory && matchesSearch;
-            });
-
-            document.getElementById('productCountBadge').textContent = `Exibindo ${filtered.length} produto(s)`;
-
-            if (filtered.length === 0) {
-                grid.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-
-            grid.innerHTML = filtered.map(p => `
-                <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between relative group">
-                    
-                    ${isDevMode ? `
-                        <div class="absolute top-2 right-2 z-20 flex gap-1 bg-white/90 backdrop-blur p-1 rounded-xl shadow border border-slate-200">
-                            <button onclick="openProductEditor('${p.id}')" title="Editar Produto/Foto" class="w-7 h-7 bg-brand-50 text-brand-700 hover:bg-brand-600 hover:text-white rounded-lg flex items-center justify-center transition text-xs">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button onclick="deleteProduct('${p.id}')" title="Excluir Produto" class="w-7 h-7 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center transition text-xs">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    ` : ''}
-
-                    <div class="relative aspect-square bg-slate-100 overflow-hidden">
-                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                        
-                        <span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur text-white text-[9px] font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider">
-                            ${p.category}
-                        </span>
-
-                        ${!p.inStock ? `
-                            <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center">
-                                <span class="bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">Esgotado</span>
-                            </div>
-                        ` : ''}
-                    </div>
-
-                    <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2">
-                        <div>
-                            <h3 class="font-extrabold text-slate-900 text-xs sm:text-sm line-clamp-1">${p.name}</h3>
-                            <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">${p.description}</p>
-                        </div>
-
-                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1">
-                            <div>
-                                ${p.oldPrice ? `<span class="text-[9px] sm:text-[10px] text-slate-400 line-through block">R$ ${Number(p.oldPrice).toFixed(2).replace('.', ',')}</span>` : ''}
-                                <span class="text-xs sm:text-base font-black text-slate-900">R$ ${Number(p.price).toFixed(2).replace('.', ',')}</span>
-                            </div>
-
-                            <button onclick="addToCart('${p.id}')" ${!p.inStock ? 'disabled' : ''} class="bg-brand-50 hover:bg-brand-600 text-brand-700 hover:text-white disabled:opacity-50 disabled:pointer-events-none p-2 sm:px-3 sm:py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 active:scale-95">
-                                <i class="fa-solid fa-plus text-xs"></i>
-                                <span class="hidden sm:inline">Comprar</span>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            `).join('');
-        }
-
-        function addToCart(productId) {
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-
-            const existing = cart.find(i => i.id === productId);
-            if (existing) {
-                existing.quantity += 1;
-            } else {
-                cart.push({ ...product, quantity: 1 });
-            }
-
-            saveCart();
-            updateCartUI();
-            toggleCartModal(true);
-        }
-
-        function updateCartQuantity(productId, delta) {
-            const item = cart.find(i => i.id === productId);
-            if (!item) return;
-
-            item.quantity += delta;
-            if (item.quantity <= 0) {
-                cart = cart.filter(i => i.id !== productId);
-            }
-
-            saveCart();
-            updateCartUI();
-        }
-
-        function saveCart() {
-            localStorage.setItem('pharma_cart_v2', JSON.stringify(cart));
-        }
-
-        function updateCartUI() {
-            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-            ['desktopCartBadge', 'mobileCartBadge'].forEach(id => {
-                const badge = document.getElementById(id);
-                if (badge) {
-                    badge.textContent = count;
-                    badge.classList.toggle('hidden', count === 0);
-                }
-            });
-
-            document.getElementById('cartSubtotal').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-
-            const list = document.getElementById('cartItemsList');
-            if (cart.length === 0) {
-                list.innerHTML = `
-                    <div class="text-center py-16 text-slate-400 space-y-2">
-                        <i class="fa-solid fa-basket-shopping text-3xl stroke-1"></i>
-                        <p class="text-xs font-semibold">Seu carrinho está vazio.</p>
-                    </div>
-                `;
-            } else {
-                list.innerHTML = cart.map(item => `
-                    <div class="flex items-center gap-3 bg-slate-50 p-2.5 rounded-2xl border border-slate-100 text-xs">
-                        <img src="${item.image}" alt="${item.name}" class="w-12 h-12 rounded-xl object-cover bg-slate-200">
-                        <div class="flex-1 min-w-0">
-                            <h4 class="font-bold text-slate-800 truncate">${item.name}</h4>
-                            <p class="text-slate-500 font-semibold">R$ ${Number(item.price).toFixed(2).replace('.', ',')}</p>
-                            <div class="flex items-center gap-2 mt-1">
-                                <button onclick="updateCartQuantity('${item.id}', -1)" class="w-5 h-5 bg-white border border-slate-200 rounded-lg flex items-center justify-center font-bold text-slate-600 hover:bg-slate-100">-</button>
-                                <span class="font-bold text-slate-900">${item.quantity}</span>
-                                <button onclick="updateCartQuantity('${item.id}', 1)" class="w-5 h-5 bg-white border border-slate-200 rounded-lg flex items-center justify-center font-bold text-slate-600 hover:bg-slate-100">+</button>
-                            </div>
-                        </div>
-                        <span class="font-extrabold text-slate-900">R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}</span>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function toggleCartModal(show) {
-            document.getElementById('cartModal').classList.toggle('hidden', !show);
-        }
-
-        function checkoutWhatsApp() {
-            if (cart.length === 0) {
-                alert('Adicione produtos ao carrinho antes de enviar o pedido.');
-                return;
-            }
-
-            const customerName = document.getElementById('customerNameInput').value.trim() || "Cliente sem nome";
-
-            let productsListText = "";
-            cart.forEach(item => {
-                productsListText += `• *${item.quantity}x ${item.name}* — R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}\n`;
-            });
-
-            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2).replace('.', ',');
-
-            // Replace template variables
-            let msg = settings.waTemplate || DEFAULT_SETTINGS.waTemplate;
-            msg = msg.replace(/{loja}/g, settings.storeName)
-                     .replace(/{produtos}/g, productsListText)
-                     .replace(/{total}/g, totalAmount)
-                     .replace(/{cliente}/g, customerName);
-
-            window.open(`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
-        function openWhatsAppDirect() {
-            window.open(`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent('Olá! Gostaria de tirar dúvidas sobre o catálogo de produtos.')}`, '_blank');
-        }
-
-        function triggerDevAccess() {
-            if (isDevMode) {
-                openDevSettingsModal();
-            } else {
-                document.getElementById('devAuthModal').classList.remove('hidden');
-            }
-        }
-
-        function closeDevAuthModal() {
-            document.getElementById('devAuthModal').classList.add('hidden');
-            document.getElementById('devLoginError').classList.add('hidden');
-        }
-
-        function handleDevLogin(e) {
-            e.preventDefault();
-            const pwd = document.getElementById('devPasswordInput').value;
-            if (pwd === settings.adminPassword) {
-                toggleDevMode(true);
-                closeDevAuthModal();
-                alert('Modo Administrador Ativado!');
-            } else {
-                document.getElementById('devLoginError').classList.remove('hidden');
-            }
-        }
-
-        function toggleDevMode(active) {
-            isDevMode = active;
-            renderHeader();
-            renderProducts();
-        }
-
-        function openProductEditor(productId = null) {
-            currentUploadedBase64 = null;
-            document.getElementById('editProductFile').value = '';
-
-            if (productId) {
-                const p = products.find(item => item.id === productId);
-                if (!p) return;
-                document.getElementById('editorModalTitle').textContent = 'Editar Produto';
-                document.getElementById('editProductId').value = p.id;
-                document.getElementById('editProductName').value = p.name;
-                document.getElementById('editProductPrice').value = p.price;
-                document.getElementById('editProductOldPrice').value = p.oldPrice || '';
-                document.getElementById('editProductCategory').value = p.category;
-                document.getElementById('editProductInStock').value = p.inStock ? "true" : "false";
-                document.getElementById('editProductImageUrl').value = p.image.startsWith('data:') ? '' : p.image;
-                document.getElementById('editProductDesc').value = p.description;
-
-                setPreviewImage(p.image);
-            } else {
-                document.getElementById('editorModalTitle').textContent = 'Novo Produto';
-                document.getElementById('editProductId').value = '';
-                document.getElementById('editProductName').value = '';
-                document.getElementById('editProductPrice').value = '';
-                document.getElementById('editProductOldPrice').value = '';
-                document.getElementById('editProductCategory').value = '';
-                document.getElementById('editProductInStock').value = 'true';
-                document.getElementById('editProductImageUrl').value = '';
-                document.getElementById('editProductDesc').value = '';
-                setPreviewImage('');
-            }
-
-            document.getElementById('productEditorModal').classList.remove('hidden');
-        }
-
-        function closeProductEditorModal() {
-            document.getElementById('productEditorModal').classList.add('hidden');
-        }
-
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentUploadedBase64 = e.target.result;
-                    setPreviewImage(currentUploadedBase64);
-                    document.getElementById('editProductImageUrl').value = '';
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function previewUrlImage(url) {
-            currentUploadedBase64 = null;
-            setPreviewImage(url);
-        }
-
-        function setPreviewImage(src) {
-            const img = document.getElementById('imagePreview');
-            const noText = document.getElementById('noPreviewText');
-            if (src && src.trim() !== '') {
-                img.src = src;
-                img.classList.remove('hidden');
-                noText.classList.add('hidden');
-            } else {
-                img.src = '';
-                img.classList.add('hidden');
-                noText.classList.remove('hidden');
-            }
-        }
-
-        function handleSaveProduct(e) {
-            e.preventDefault();
-            const id = document.getElementById('editProductId').value || 'prod_' + Date.now();
-            
-            let finalImage = currentUploadedBase64 || document.getElementById('editProductImageUrl').value.trim();
-            if (!finalImage) {
-                finalImage = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80';
-            }
-
-            const newProduct = {
-                id,
-                name: document.getElementById('editProductName').value,
-                price: parseFloat(document.getElementById('editProductPrice').value),
-                oldPrice: document.getElementById('editProductOldPrice').value ? parseFloat(document.getElementById('editProductOldPrice').value) : null,
-                category: document.getElementById('editProductCategory').value,
-                inStock: document.getElementById('editProductInStock').value === "true",
-                image: finalImage,
-                description: document.getElementById('editProductDesc').value
-            };
-
-            const index = products.findIndex(p => p.id === id);
-            if (index > -1) {
-                products[index] = newProduct;
-            } else {
-                products.push(newProduct);
-            }
-
-            localStorage.setItem('pharma_products_v2', JSON.stringify(products));
-            closeProductEditorModal();
-            renderCategories();
-            renderProducts();
-        }
-
-        function deleteProduct(productId) {
-            if (confirm('Tem certeza que deseja excluir este produto do catálogo?')) {
-                products = products.filter(p => p.id !== productId);
-                localStorage.setItem('pharma_products_v2', JSON.stringify(products));
-                renderCategories();
-                renderProducts();
-            }
-        }
-
-        function openDevSettingsModal() {
-            document.getElementById('settingStoreName').value = settings.storeName;
-            document.getElementById('settingWhatsApp').value = settings.whatsapp;
-            document.getElementById('settingWaTemplate').value = settings.waTemplate || DEFAULT_SETTINGS.waTemplate;
-            document.getElementById('settingAdminPassword').value = '';
-            document.getElementById('devSettingsModal').classList.remove('hidden');
-        }
-
-        function closeDevSettingsModal() {
-            document.getElementById('devSettingsModal').classList.add('hidden');
-        }
-
-        function handleSaveDevSettings(e) {
-            e.preventDefault();
-            settings.storeName = document.getElementById('settingStoreName').value;
-            settings.whatsapp = document.getElementById('settingWhatsApp').value;
-            settings.waTemplate = document.getElementById('settingWaTemplate').value;
-            
-            const newPwd = document.getElementById('settingAdminPassword').value;
-            if (newPwd.trim() !== '') {
-                settings.adminPassword = newPwd;
-            }
-
-            localStorage.setItem('pharma_settings_v2', JSON.stringify(settings));
-            renderHeader();
-            closeDevSettingsModal();
-            alert('Configurações e modelo do WhatsApp salvos com sucesso!');
-        }
-
-        function resetToDefaults() {
-            if (confirm('Deseja restaurar todos os produtos, preços e mensagens para os padrões iniciais?')) {
-                localStorage.clear();
-                settings = DEFAULT_SETTINGS;
-                products = DEFAULT_PRODUCTS;
-                cart = [];
-                location.reload();
-            }
-        }
-
-        // Search & Category Filters
-        function selectCategory(cat) {
-            selectedCategory = cat;
-            renderCategories();
-            renderProducts();
-        }
-
-        function handleSearch(val) {
-            searchQuery = val;
-            renderProducts();
-        }
-    </script>
+    // Inicialização
+    renderProducts();
+  </script>
 </body>
 </html>
