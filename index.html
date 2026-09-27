@@ -1,356 +1,387 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="siteTitleTag">PharmaPrime | E-Commerce Wellness</title>
-    <!-- Tailwind CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title id="pageTitle">PharmaPrime | Saúde & Otimização Metabólica</title>
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         brand: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                            800: '#115e59',
-                            900: '#134e4a',
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
                         }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        html { scroll-behavior: smooth; }
-        ::-webkit-scrollbar { width: 6px; }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        /* Custom Smooth Scrollbar */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Hide scrollbars for clean UI horizontal lists */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Modal Backdrop blur & animations */
+        .modal-animate-enter { animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(100%); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (min-width: 640px) {
+            @keyframes modalIn {
+                from { opacity: 0; transform: scale(0.95); }
+                to { opacity: 1; transform: scale(1); }
+            }
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+<body class="h-full flex flex-col text-slate-800 antialiased bg-slate-50 pb-20 md:pb-0">
 
-    <!-- Admin Indicator Banner (Visible when Admin Mode is ON) -->
-    <div id="adminActiveBar" class="hidden bg-amber-500 text-amber-950 px-4 py-2 text-xs font-bold flex justify-between items-center shadow-inner">
-        <div class="flex items-center gap-2">
-            <i data-lucide="shield-alert" class="w-4 h-4"></i>
-            <span>MODO DESENVOLVEDOR ATIVO — Você pode editar preços e conteúdos diretamente.</span>
+    <div id="devBar" class="hidden bg-amber-500 text-amber-950 px-4 py-2 text-xs font-bold flex justify-between items-center sticky top-0 z-50 shadow-md">
+        <div class="flex items-center gap-2 truncate">
+            <i class="fa-solid fa-user-shield text-sm"></i>
+            <span class="truncate">MODO DESENVOLVEDOR ATIVO — Clique em "Editar" nos cards ou abra as configurações.</span>
         </div>
-        <button onclick="toggleAdminMode()" class="bg-amber-950 text-white px-3 py-1 rounded-md text-[11px] hover:bg-black transition">
-            Sair do Modo Dev
-        </button>
+        <div class="flex items-center gap-2">
+            <button onclick="openDevSettingsModal()" class="bg-amber-900 text-white px-2.5 py-1 rounded-lg text-[11px] hover:bg-black transition flex items-center gap-1">
+                <i class="fa-solid fa-gear"></i> Opções
+            </button>
+            <button onclick="toggleDevMode(false)" class="bg-amber-950/80 text-white px-2 py-1 rounded-lg text-[11px] hover:bg-black transition">
+                Sair
+            </button>
+        </div>
     </div>
 
-    <!-- Announcement Bar -->
-    <div class="bg-brand-900 text-slate-100 text-xs py-2 px-4 text-center font-medium flex justify-center items-center gap-2">
-        <i data-lucide="truck" class="w-4 h-4"></i>
-        <span>Envio Discreto para todo o Brasil • Pedidos rápidos via WhatsApp</span>
-    </div>
-
-    <!-- Header / Navbar -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="#" class="flex items-center gap-2 group">
-                <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center font-extrabold text-xl shadow-md">
-                    P
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+            
+            <!-- Logo Brand -->
+            <a href="#" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-700 to-brand-500 text-white flex items-center justify-center font-extrabold text-xl shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-vial-circle-check text-lg"></i>
                 </div>
                 <div class="flex flex-col">
-                    <span id="brandNameDisplay" class="font-extrabold text-xl tracking-tight text-slate-900 leading-none">Pharma<span class="text-brand-600">Prime</span></span>
-                    <span class="text-[10px] text-slate-400 font-medium tracking-wider uppercase mt-1">Alta Performance & Saúde</span>
+                    <span id="headerBrandName" class="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 leading-none">
+                        Pharma<span class="text-brand-600">Prime</span>
+                    </span>
+                    <span class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase mt-0.5">Saúde & Alta Performance</span>
                 </div>
             </a>
 
-            <nav class="hidden md:flex items-center gap-8 font-semibold text-sm text-slate-600">
-                <a href="#produtos" class="hover:text-brand-600 transition">Produtos</a>
-                <a href="#diferenciais" class="hover:text-brand-600 transition">Garantias</a>
-                <a href="#faq" class="hover:text-brand-600 transition">Dúvidas</a>
-            </nav>
+            <!-- Search Bar Desktop & Tablet -->
+            <div class="hidden sm:flex flex-1 max-w-md mx-4 relative">
+                <input type="text" id="desktopSearchInput" oninput="handleSearch(this.value)" placeholder="Buscar Tirzepatida, Mounjaro, Lipoless..." class="w-full pl-10 pr-4 py-2 bg-slate-100 border border-transparent rounded-2xl text-xs focus:bg-white focus:border-brand-500 focus:outline-none transition">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+            </div>
 
-            <div class="flex items-center gap-3">
-                <!-- Cart Trigger Button -->
-                <button onclick="toggleCart()" class="relative p-2.5 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition focus:outline-none">
-                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-                    <span id="cartCount" class="absolute -top-1 -right-1 bg-brand-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+            <!-- Top Header Actions -->
+            <div class="flex items-center gap-2">
+                <!-- Cart Button (Desktop) -->
+                <button onclick="toggleCartModal(true)" class="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand-600 transition font-semibold text-xs relative">
+                    <i class="fa-solid fa-bag-shopping text-base"></i>
+                    <span>Carrinho</span>
+                    <span id="desktopCartBadge" class="bg-brand-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
                 </button>
 
-                <!-- Dev Mode Toggle Button -->
-                <button onclick="openDevAuthModal()" title="Painel do Desenvolvedor" class="p-2.5 rounded-full bg-slate-100 text-slate-500 hover:text-brand-600 hover:bg-brand-50 transition">
-                    <i data-lucide="settings" class="w-5 h-5"></i>
+                <!-- Dev Access Icon -->
+                <button onclick="triggerDevAccess()" title="Painel do Desenvolvedor" class="p-2.5 rounded-2xl bg-slate-100 text-slate-500 hover:text-brand-600 hover:bg-brand-50 transition">
+                    <i class="fa-solid fa-sliders text-base"></i>
                 </button>
+            </div>
+        </div>
+
+        <!-- Mobile Search Bar Sub-header -->
+        <div class="sm:hidden px-4 pb-3">
+            <div class="relative">
+                <input type="text" id="mobileSearchInput" oninput="handleSearch(this.value)" placeholder="Buscar Tirzepatida, Mounjaro, Lipoless..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-transparent rounded-xl text-xs focus:bg-white focus:border-brand-500 focus:outline-none transition">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
             </div>
         </div>
     </header>
 
-    <!-- Hero Banner -->
-    <section class="bg-gradient-to-b from-brand-50/60 via-white to-slate-50 py-12 lg:py-16 border-b border-slate-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center lg:text-left">
-            <div class="grid lg:grid-cols-2 gap-8 items-center">
-                <div class="space-y-4">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-100 text-brand-800 text-xs font-bold uppercase tracking-wider">
-                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-brand-600"></i> Produtos 100% Originais
-                    </span>
-                    <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-                        Seu catálogo de <span class="text-brand-600">Bem-Estar & Saúde</span> de alta qualidade.
-                    </h1>
-                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl mx-auto lg:mx-0">
-                        Compre Tirzepatida, Mounjaro, Lipoless e mais com suporte humanizado, envio sigiloso e atendimento rápido pelo WhatsApp.
-                    </p>
-                    <div class="pt-2 flex flex-wrap justify-center lg:justify-start gap-4">
-                        <a href="#produtos" class="bg-brand-600 text-white text-sm font-bold px-6 py-3.5 rounded-xl shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition flex items-center gap-2">
-                            <span>Ver Produtos</span>
-                            <i data-lucide="arrow-down" class="w-4 h-4"></i>
-                        </a>
-                        <button onclick="openWhatsAppContact()" class="bg-white border border-slate-200 text-slate-700 text-sm font-bold px-6 py-3.5 rounded-xl hover:bg-slate-50 transition flex items-center gap-2 shadow-sm">
-                            <i data-lucide="message-circle" class="w-4 h-4 text-emerald-500"></i>
-                            Falar no WhatsApp
-                        </button>
-                    </div>
-                </div>
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
 
-                <div class="hidden lg:flex justify-end">
-                    <div class="bg-white p-4 rounded-3xl shadow-xl border border-slate-100 max-w-sm w-full space-y-3">
-                        <div class="flex items-center gap-3 p-3 bg-brand-50 rounded-2xl">
-                            <i data-lucide="package-check" class="w-8 h-8 text-brand-600"></i>
-                            <div>
-                                <p class="font-bold text-xs text-slate-900">Embalagens Neutras</p>
-                                <p class="text-[11px] text-slate-500">Total discrição na entrega</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 bg-emerald-50 rounded-2xl">
-                            <i data-lucide="zap" class="w-8 h-8 text-emerald-600"></i>
-                            <div>
-                                <p class="font-bold text-xs text-slate-900">Desconto via PIX</p>
-                                <p class="text-[11px] text-slate-500">Confirmação imediata</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Mobile / Desktop Hero Promo Banner -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-brand-900 to-slate-900 text-white p-5 sm:p-8 shadow-xl">
+            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-brand-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 max-w-xl space-y-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-400/30 text-brand-300 text-[11px] font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-shield-halved text-brand-400"></i> Envio 100% Discreto & Seguro
+                </span>
+                <h1 class="text-xl sm:text-3xl font-extrabold tracking-tight leading-tight">
+                    Catálogo Oficial de <span class="text-brand-400">Emagrecimento & Alta Performance</span>
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    Compre Tirzepatida, Mounjaro e Lipoless diretamente com suporte especializado via WhatsApp e desconto exclusivo no PIX.
+                </p>
             </div>
         </div>
-    </section>
 
-    <!-- Catalog Section -->
-    <section id="produtos" class="py-12 flex-1">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
-                <div>
-                    <h2 class="text-xs font-extrabold uppercase tracking-widest text-brand-600">Catálogo Atualizado</h2>
-                    <p class="text-2xl sm:text-3xl font-black text-slate-900">Nossos Produtos</p>
-                </div>
-
-                <!-- Admin "Add Product" button (Visible in Dev Mode) -->
-                <button id="addNewProductBtn" onclick="openAddProductModal()" class="hidden bg-emerald-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-emerald-700 transition flex items-center gap-1.5 shadow-md">
-                    <i data-lucide="plus" class="w-4 h-4"></i> Novo Produto
-                </button>
+        <!-- Category Filters Pill Bar (Mobile Horizontally Scrollable) -->
+        <div class="space-y-3">
+            <div class="flex items-center justify-between">
+                <h2 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-fire text-amber-500"></i> Produtos em Destaque
+                </h2>
+                <span id="productCountBadge" class="text-xs text-slate-400 font-medium">Exibindo 0 produtos</span>
             </div>
 
-            <!-- Product Grid -->
-            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Products rendered via JavaScript -->
+            <!-- Category Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="categoryContainer">
+                <!-- Dynamically rendered categories -->
             </div>
         </div>
-    </section>
 
-    <!-- Features Section -->
-    <section id="diferenciais" class="py-12 bg-white border-y border-slate-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                    <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center">
-                        <i data-lucide="shield-check" class="w-5 h-5"></i>
-                    </div>
-                    <h3 class="font-bold text-sm text-slate-900">Qualidade Garantida</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed">Produtos selecionados de marcas reconhecidas e armazenados sob rígido controle de qualidade.</p>
-                </div>
-                <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                    <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center">
-                        <i data-lucide="truck" class="w-5 h-5"></i>
-                    </div>
-                    <h3 class="font-bold text-sm text-slate-900">Envio Seguro</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed">Caixas sem inscrições do conteúdo para garantir sua total privacidade do pedido à entrega.</p>
-                </div>
-                <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                    <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center">
-                        <i data-lucide="message-square" class="w-5 h-5"></i>
-                    </div>
-                    <h3 class="font-bold text-sm text-slate-900">Atendimento Humanizado</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed">Tire suas dúvidas diretamente pelo WhatsApp antes de fechar o seu pedido.</p>
-                </div>
-            </div>
+        <!-- Products Grid (2 columns on mobile, 3 on tablet, 4 on desktop) -->
+        <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+            <!-- Dynamically rendered products -->
         </div>
-    </section>
 
-    <!-- FAQ Section -->
-    <section id="faq" class="py-12 bg-slate-50">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-            <h2 class="text-xl font-bold text-slate-900 text-center mb-6">Dúvidas Frequentes</h2>
+        <!-- Empty State Message -->
+        <div id="emptyState" class="hidden text-center py-12 space-y-3">
+            <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-box-open"></i>
+            </div>
+            <p class="text-sm font-bold text-slate-700">Nenhum produto encontrado</p>
+            <p class="text-xs text-slate-400">Tente buscar por outro termo ou selecione a categoria "Todos".</p>
+        </div>
+
+    </main>
+
+    <nav class="sm:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200/80 z-40 px-6 py-2 flex items-center justify-between shadow-lg">
+        <a href="#" class="flex flex-col items-center gap-1 text-brand-600">
+            <i class="fa-solid fa-house text-base"></i>
+            <span class="text-[10px] font-bold">Início</span>
+        </a>
+        <button onclick="toggleCartModal(true)" class="flex flex-col items-center gap-1 text-slate-500 hover:text-brand-600 relative">
+            <div class="relative">
+                <i class="fa-solid fa-bag-shopping text-base"></i>
+                <span id="mobileCartBadge" class="absolute -top-1.5 -right-2.5 bg-brand-600 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center hidden">0</span>
+            </div>
+            <span class="text-[10px] font-medium">Carrinho</span>
+        </button>
+        <button onclick="openWhatsAppDirect()" class="flex flex-col items-center gap-1 text-slate-500 hover:text-emerald-600">
+            <i class="fa-brands fa-whatsapp text-base text-emerald-500"></i>
+            <span class="text-[10px] font-medium">Atendimento</span>
+        </button>
+        <button onclick="triggerDevAccess()" class="flex flex-col items-center gap-1 text-slate-500 hover:text-brand-600">
+            <i class="fa-solid fa-sliders text-base"></i>
+            <span class="text-[10px] font-medium">Painel Dev</span>
+        </button>
+    </nav>
+
+    <div id="cartModal" class="fixed inset-0 z-50 hidden">
+        <div onclick="toggleCartModal(false)" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"></div>
+        <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col h-full modal-animate-enter">
             
-            <details class="bg-white p-4 rounded-xl border border-slate-200/60 transition cursor-pointer">
-                <summary class="font-semibold text-xs sm:text-sm text-slate-800 list-none flex justify-between items-center">
-                    <span>Como é feita a finalização do pedido?</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
-                </summary>
-                <p class="text-xs text-slate-500 mt-2 leading-relaxed">Após escolher os produtos no carrinho, clique em "Finalizar no WhatsApp". Você será redirecionado para a nossa equipe com a lista completa do seu pedido para calcular o frete e forma de pagamento.</p>
-            </details>
+            <!-- Cart Header -->
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-bag-shopping text-brand-600 text-lg"></i>
+                    <h3 class="font-extrabold text-slate-900 text-base">Seu Carrinho</h3>
+                </div>
+                <button onclick="toggleCartModal(false)" class="w-8 h-8 rounded-full bg-slate-200/60 text-slate-600 flex items-center justify-center hover:bg-slate-200 transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
 
-            <details class="bg-white p-4 rounded-xl border border-slate-200/60 transition cursor-pointer">
-                <summary class="font-semibold text-xs sm:text-sm text-slate-800 list-none flex justify-between items-center">
-                    <span>Quais as opções de pagamento?</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
-                </summary>
-                <p class="text-xs text-slate-500 mt-2 leading-relaxed">Aceitamos PIX (com desconto especial) e Cartão de Crédito diretamente no atendimento do WhatsApp.</p>
-            </details>
-        </div>
-    </section>
+            <!-- Cart Items List -->
+            <div id="cartItemsList" class="flex-1 overflow-y-auto p-4 space-y-3">
+                <!-- Cart items JS rendered -->
+            </div>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-            <p class="text-xs">&copy; 2026 <span id="footerBrandName">PharmaPrime</span>. Todos os direitos reservados.</p>
-            <div class="flex justify-center items-center gap-4 text-[11px]">
-                <button onclick="openDevAuthModal()" class="text-slate-500 hover:text-slate-300 transition underline">
-                    Área do Desenvolvedor / Admin
+            <!-- Cart Footer Checkout -->
+            <div class="p-4 border-t border-slate-100 bg-slate-50 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-slate-500">Subtotal do pedido:</span>
+                    <span id="cartSubtotal" class="font-black text-lg text-slate-900">R$ 0,00</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-100 text-[11px] text-emerald-800 flex items-center gap-2">
+                    <i class="fa-solid fa-truck-fast text-emerald-600 text-sm"></i>
+                    <span>Envio discreto sem identificação de conteúdo na caixa.</span>
+                </div>
+                <button onclick="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold py-3.5 px-4 rounded-2xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    <span>Finalizar Pedido no WhatsApp</span>
                 </button>
             </div>
         </div>
-    </footer>
-
-    <!-- Cart Drawer Modal -->
-    <div id="cartBackdrop" onclick="toggleCart()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity"></div>
-    <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
-        <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-            <div class="flex items-center gap-2">
-                <i data-lucide="shopping-bag" class="w-5 h-5 text-brand-600"></i>
-                <h3 class="font-bold text-base text-slate-900">Seu Carrinho</h3>
-            </div>
-            <button onclick="toggleCart()" class="p-1 rounded-full hover:bg-slate-200 text-slate-500">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-        </div>
-
-        <div id="cartItems" class="flex-1 overflow-y-auto p-5 space-y-3">
-            <!-- Cart Items JS -->
-        </div>
-
-        <div class="p-5 border-t border-slate-100 bg-slate-50 space-y-3">
-            <div class="flex justify-between font-extrabold text-base text-slate-900">
-                <span>Total:</span>
-                <span id="cartTotal">R$ 0,00</span>
-            </div>
-            <button onclick="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2 text-sm">
-                <i data-lucide="message-circle" class="w-5 h-5"></i>
-                Finalizar no WhatsApp
-            </button>
-        </div>
     </div>
 
-    <!-- Developer Login Modal -->
-    <div id="devAuthModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-4">
+    <div id="devAuthModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div onclick="closeDevAuthModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm p-6 space-y-4 modal-animate-enter z-10">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
-                    <i data-lucide="lock" class="w-4 h-4 text-brand-600"></i> Painel do Desenvolvedor
-                </h3>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-lock text-brand-600 text-base"></i>
+                    <h3 class="font-extrabold text-slate-900 text-base">Acesso do Desenvolvedor</h3>
+                </div>
                 <button onclick="closeDevAuthModal()" class="text-slate-400 hover:text-slate-600">
-                    <i data-lucide="x" class="w-4 h-4"></i>
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <p class="text-xs text-slate-500">Digite a senha de acesso para habilitar a edição de preços e configurações do site.</p>
+            <p class="text-xs text-slate-500">Digite a senha administrativa para editar preços, trocar fotos e gerenciar o catálogo.</p>
             <form onsubmit="handleDevLogin(event)" class="space-y-3">
-                <input type="password" id="devPasswordInput" placeholder="Senha do Admin" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
+                <div>
+                    <input type="password" id="devPasswordInput" placeholder="Senha de Admin (Padrão: admin123)" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
+                </div>
                 <p id="devLoginError" class="text-red-500 text-[11px] hidden font-semibold">Senha incorreta. Tente novamente.</p>
-                <button type="submit" class="w-full bg-brand-600 text-white font-bold py-2.5 rounded-xl text-xs hover:bg-brand-700 transition">
-                    Entrar no Modo Dev
+                <button type="submit" class="w-full bg-brand-600 text-white font-bold py-3 rounded-xl text-xs hover:bg-brand-700 transition shadow-md shadow-brand-600/20">
+                    Entrar no Painel Dev
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- Developer Settings Modal (WhatsApp, Admin Password) -->
-    <div id="devSettingsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
+    <div id="productEditorModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 sm:p-4">
+        <div onclick="closeProductEditorModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-5 sm:p-6 space-y-4 modal-animate-enter z-10 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
-                    <i data-lucide="settings-2" class="w-4 h-4 text-brand-600"></i> Configurações do Desenvolvedor
-                </h3>
-                <button onclick="closeDevSettingsModal()" class="text-slate-400 hover:text-slate-600">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
-            </div>
-
-            <form onsubmit="saveDevSettings(event)" class="space-y-3 text-xs">
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Nome da Loja</label>
-                    <input type="text" id="settingStoreName" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Número do WhatsApp (com DDD e DDI 55)</label>
-                    <input type="text" id="settingWhatsApp" placeholder="Ex: 5511999998888" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Nova Senha de Admin</label>
-                    <input type="password" id="settingAdminPassword" placeholder="Deixe em branco para não alterar" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                </div>
-                <div class="pt-2 flex justify-end gap-2">
-                    <button type="button" onclick="closeDevSettingsModal()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition">Salvar Alterações</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Add / Edit Product Modal -->
-    <div id="productModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 id="productModalTitle" class="font-bold text-slate-900 text-base">Novo Produto</h3>
-                <button onclick="closeProductModal()" class="text-slate-400 hover:text-slate-600">
-                    <i data-lucide="x" class="w-4 h-4"></i>
+                <h3 id="editorModalTitle" class="font-extrabold text-slate-900 text-base">Editar Produto</h3>
+                <button onclick="closeProductEditorModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
             <form onsubmit="handleSaveProduct(event)" class="space-y-3 text-xs">
-                <input type="hidden" id="prodEditId">
+                <input type="hidden" id="editProductId">
+                
                 <div>
                     <label class="block font-bold text-slate-700 mb-1">Nome do Produto</label>
-                    <input type="text" id="prodNameInput" placeholder="Ex: Tirzepatida 10mg" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
+                    <input type="text" id="editProductName" placeholder="Ex: Tirzepatida 10mg" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
                 </div>
+
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Preço Atual (R$)</label>
-                        <input type="number" step="0.01" id="prodPriceInput" placeholder="0.00" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
+                        <input type="number" step="0.01" id="editProductPrice" placeholder="0.00" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
                     </div>
                     <div>
-                        <label class="block font-bold text-slate-700 mb-1">Preço Antigo (R$)</label>
-                        <input type="number" step="0.01" id="prodOldPriceInput" placeholder="Opcional" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <label class="block font-bold text-slate-700 mb-1">Preço Antigo / Riscos (R$)</label>
+                        <input type="number" step="0.01" id="editProductOldPrice" placeholder="Opcional" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
                 </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Categoria / Etiqueta</label>
-                    <input type="text" id="prodCategoryInput" placeholder="Ex: Peptídeos / Destaque" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Categoria</label>
+                        <input type="text" id="editProductCategory" placeholder="Ex: Peptídeos / Canetas" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Estoque</label>
+                        <select id="editProductInStock" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white">
+                            <option value="true">Disponível / Em Estoque</option>
+                            <option value="false">Esgotado</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">URL da Imagem</label>
-                    <input type="url" id="prodImageInput" placeholder="https://..." class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
+
+                <!-- IMAGE SOURCE SELECTION (URL or File Upload) -->
+                <div class="space-y-2 p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                    <label class="block font-bold text-slate-800">Imagem do Produto (Troca rápida)</label>
+                    
+                    <!-- Preview Box -->
+                    <div class="flex items-center gap-3">
+                        <img id="imagePreview" src="" class="w-16 h-16 rounded-xl object-cover bg-slate-200 border border-slate-200 hidden">
+                        <span id="noPreviewText" class="text-[11px] text-slate-400 italic">Nenhuma imagem carregada.</span>
+                    </div>
+
+                    <!-- Option A: File Upload from Phone / PC -->
+                    <div>
+                        <span class="block text-[11px] font-semibold text-slate-600 mb-1">Upload do Celular ou Computador:</span>
+                        <input type="file" id="editProductFile" accept="image/*" onchange="handleFileUpload(event)" class="block w-full text-[11px] text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-semibold file:bg-brand-100 file:text-brand-800 hover:file:bg-brand-200 cursor-pointer">
+                    </div>
+
+                    <div class="text-center font-bold text-[10px] text-slate-400 uppercase tracking-widest my-1">— OU —</div>
+
+                    <!-- Option B: Image URL -->
+                    <div>
+                        <span class="block text-[11px] font-semibold text-slate-600 mb-1">Link/URL de Imagem Externa:</span>
+                        <input type="url" id="editProductImageUrl" placeholder="https://..." oninput="previewUrlImage(this.value)" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-xs">
+                    </div>
                 </div>
+
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">Descrição</label>
-                    <textarea id="prodDescInput" rows="2" placeholder="Breve descrição do produto..." class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required></textarea>
+                    <label class="block font-bold text-slate-700 mb-1">Descrição Curta do Produto</label>
+                    <textarea id="editProductDesc" rows="2" placeholder="Resumo de indicação e detalhes..." class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required></textarea>
                 </div>
 
                 <div class="pt-2 flex justify-end gap-2">
-                    <button type="button" onclick="closeProductModal()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition">Salvar Produto</button>
+                    <button type="button" onclick="closeProductEditorModal()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition shadow-md shadow-brand-600/20">Salvar Produto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="devSettingsModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 sm:p-4">
+        <div onclick="closeDevSettingsModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-5 sm:p-6 space-y-4 modal-animate-enter z-10">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-gear text-brand-600 text-base"></i>
+                    <h3 class="font-extrabold text-slate-900 text-base">Configurações Gerais do Dev</h3>
+                </div>
+                <button onclick="closeDevSettingsModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleSaveDevSettings(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Nome da Loja</label>
+                    <input type="text" id="settingStoreName" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Número do WhatsApp (com DDD e 55)</label>
+                    <input type="text" id="settingWhatsApp" placeholder="Ex: 5511999998888" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none" required>
+                    <span class="text-[10px] text-slate-400 mt-1 block">Os pedidos do carrinho serão enviados para este número.</span>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Nova Senha do Desenvolvedor</label>
+                    <input type="password" id="settingAdminPassword" placeholder="Deixe em branco para manter a atual" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+
+                <div class="pt-2 flex justify-between items-center">
+                    <button type="button" onclick="resetToDefaults()" class="text-red-500 hover:underline font-semibold text-[11px]">Restaurar Dados Padrão</button>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="closeDevSettingsModal()" class="px-3.5 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold">Cancelar</button>
+                        <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition">Salvar Alterações</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -359,9 +390,9 @@
     <script>
         // Default System Data
         const DEFAULT_SETTINGS = {
+            storeName: "PharmaPrime",
             whatsapp: "5511999999999",
-            adminPassword: "admin123",
-            storeName: "PharmaPrime"
+            adminPassword: "admin123"
         };
 
         const DEFAULT_PRODUCTS = [
@@ -372,89 +403,159 @@
                 price: 650.00,
                 oldPrice: 750.00,
                 image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
-                description: 'Solução concentrada para otimização metabólica e controle do apetite.'
+                description: 'Dual receptor GLP-1/GIP de alta pureza para rápida otimização metabólica.',
+                inStock: true
             },
             {
                 id: 'mounjaro-5mg',
                 name: 'Mounjaro 5mg',
-                category: 'Caneta Pronta',
+                category: 'Canetas',
                 price: 1350.00,
                 oldPrice: 1500.00,
                 image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=600&q=80',
-                description: 'Dispositivo aplicador original de alta precisão.'
+                description: 'Caneta aplicadora lacrada original com dosagem controlada.',
+                inStock: true
             },
             {
-                id: 'lipoless-slim',
+                id: 'lipoless-complex',
                 name: 'Lipoless Complex',
-                category: 'Termogênico',
+                category: 'Cápsulas',
                 price: 280.00,
                 oldPrice: 340.00,
                 image: 'https://images.unsplash.com/photo-1550572017-edd951aa8f72?auto=format&fit=crop&w=600&q=80',
-                description: 'Fórmula em cápsulas para queima de gordura e suporte diário.'
+                description: 'Acelerador metabólico em cápsulas para queima de gordura visceral.',
+                inStock: true
+            },
+            {
+                id: 'semaglutida-4mg',
+                name: 'Semaglutida 4mg',
+                category: 'Injetáveis',
+                price: 520.00,
+                oldPrice: 600.00,
+                image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=600&q=80',
+                description: 'Solução para controle de apetite e saciedade prolongada.',
+                inStock: true
             }
         ];
 
-        // Persistent State Handling
-        let settings = JSON.parse(localStorage.getItem('dev_settings')) || DEFAULT_SETTINGS;
-        let products = JSON.parse(localStorage.getItem('dev_products')) || DEFAULT_PRODUCTS;
-        let cart = JSON.parse(localStorage.getItem('dev_cart')) || [];
+        // State variables
+        let settings = JSON.parse(localStorage.getItem('pharma_settings')) || DEFAULT_SETTINGS;
+        let products = JSON.parse(localStorage.getItem('pharma_products')) || DEFAULT_PRODUCTS;
+        let cart = JSON.parse(localStorage.getItem('pharma_cart')) || [];
         let isDevMode = false;
+        let selectedCategory = 'Todos';
+        let searchQuery = '';
+        let currentUploadedBase64 = null;
 
-        // Render UI Elements
-        function initApp() {
-            updateHeaderAndSettings();
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            renderHeader();
+            renderCategories();
             renderProducts();
             updateCartUI();
-            lucide.createIcons();
+        });
+
+        function renderHeader() {
+            document.getElementById('pageTitle').textContent = `${settings.storeName} | Saúde & Alta Performance`;
+            document.getElementById('headerBrandName').innerHTML = `${settings.storeName.substring(0, 6)}<span class="text-brand-600">${settings.storeName.substring(6) || ''}</span>`;
+            document.getElementById('devBar').classList.toggle('hidden', !isDevMode);
         }
 
-        function updateHeaderAndSettings() {
-            document.getElementById('brandNameDisplay').innerHTML = `${settings.storeName.replace('Prime', '')}<span class="text-brand-600">Prime</span>`;
-            document.getElementById('footerBrandName').textContent = settings.storeName;
+        function renderCategories() {
+            const categories = ['Todos', ...new Set(products.map(p => p.category))];
+            const container = document.getElementById('categoryContainer');
+            
+            container.innerHTML = categories.map(cat => `
+                <button onclick="selectCategory('${cat}')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
+                    selectedCategory === cat 
+                    ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' 
+                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80'
+                }">
+                    ${cat}
+                </button>
+            `).join('');
         }
 
         function renderProducts() {
             const grid = document.getElementById('productGrid');
-            grid.innerHTML = products.map(p => `
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between group relative">
+            const emptyState = document.getElementById('emptyState');
+
+            const filtered = products.filter(p => {
+                const matchesCategory = selectedCategory === 'Todos' || p.category === selectedCategory;
+                const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      p.description.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            document.getElementById('productCountBadge').textContent = `Exibindo ${filtered.length} produto(s)`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between relative group">
+                    
+                    <!-- Admin Quick Actions Hover Overlay -->
                     ${isDevMode ? `
-                        <div class="absolute top-2 right-2 z-10 flex gap-1 bg-white/90 p-1 rounded-xl shadow border border-slate-200">
-                            <button onclick="editProduct('${p.id}')" title="Editar" class="p-1 text-slate-600 hover:text-brand-600"><i data-lucide="pencil" class="w-4 h-4"></i></button>
-                            <button onclick="deleteProduct('${p.id}')" title="Excluir" class="p-1 text-slate-600 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        <div class="absolute top-2 right-2 z-20 flex gap-1 bg-white/90 backdrop-blur p-1 rounded-xl shadow border border-slate-200">
+                            <button onclick="openProductEditor('${p.id}')" title="Editar Produto/Imagem" class="w-7 h-7 bg-brand-50 text-brand-700 hover:bg-brand-600 hover:text-white rounded-lg flex items-center justify-center transition text-xs">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="deleteProduct('${p.id}')" title="Excluir Produto" class="w-7 h-7 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center transition text-xs">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
                         </div>
                     ` : ''}
-                    <div class="relative aspect-video bg-slate-100">
-                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-brand-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">${p.category}</span>
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
-                        <div>
-                            <h3 class="font-bold text-slate-900 text-base">${p.name}</h3>
-                            <p class="text-xs text-slate-500 mt-1 line-clamp-2">${p.description}</p>
-                        </div>
-                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                            <div>
-                                ${p.oldPrice ? `<span class="text-[11px] text-slate-400 line-through block">R$ ${Number(p.oldPrice).toFixed(2).replace('.', ',')}</span>` : ''}
-                                <span class="text-lg font-black text-slate-900">R$ ${Number(p.price).toFixed(2).replace('.', ',')}</span>
+
+                    <!-- Product Image -->
+                    <div class="relative aspect-square bg-slate-100 overflow-hidden">
+                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        
+                        <span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur text-white text-[9px] font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider">
+                            ${p.category}
+                        </span>
+
+                        ${!p.inStock ? `
+                            <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center">
+                                <span class="bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">Esgotado</span>
                             </div>
-                            <button onclick="addToCart('${p.id}')" class="bg-brand-50 text-brand-700 hover:bg-brand-600 hover:text-white px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1">
-                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                                <span>Adicionar</span>
+                        ` : ''}
+                    </div>
+
+                    <!-- Product Info Body -->
+                    <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2">
+                        <div>
+                            <h3 class="font-extrabold text-slate-900 text-xs sm:text-sm line-clamp-1">${p.name}</h3>
+                            <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">${p.description}</p>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1">
+                            <div>
+                                ${p.oldPrice ? `<span class="text-[9px] sm:text-[10px] text-slate-400 line-through block">R$ ${Number(p.oldPrice).toFixed(2).replace('.', ',')}</span>` : ''}
+                                <span class="text-xs sm:text-base font-black text-slate-900">R$ ${Number(p.price).toFixed(2).replace('.', ',')}</span>
+                            </div>
+
+                            <button onclick="addToCart('${p.id}')" ${!p.inStock ? 'disabled' : ''} class="bg-brand-50 hover:bg-brand-600 text-brand-700 hover:text-white disabled:opacity-50 disabled:pointer-events-none p-2 sm:px-3 sm:py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 active:scale-95">
+                                <i class="fa-solid fa-plus text-xs"></i>
+                                <span class="hidden sm:inline">Comprar</span>
                             </button>
                         </div>
                     </div>
+
                 </div>
             `).join('');
-
-            lucide.createIcons();
         }
 
-        // Cart Actions
         function addToCart(productId) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
 
-            const existing = cart.find(item => item.id === productId);
+            const existing = cart.find(i => i.id === productId);
             if (existing) {
                 existing.quantity += 1;
             } else {
@@ -463,97 +564,94 @@
 
             saveCart();
             updateCartUI();
-            toggleCart(true);
+            toggleCartModal(true);
         }
 
-        function changeQuantity(id, delta) {
-            const item = cart.find(i => i.id === id);
-            if (item) {
-                item.quantity += delta;
-                if (item.quantity <= 0) {
-                    cart = cart.filter(i => i.id !== id);
-                }
-                saveCart();
-                updateCartUI();
+        function updateCartQuantity(productId, delta) {
+            const item = cart.find(i => i.id === productId);
+            if (!item) return;
+
+            item.quantity += delta;
+            if (item.quantity <= 0) {
+                cart = cart.filter(i => i.id !== productId);
             }
+
+            saveCart();
+            updateCartUI();
         }
 
         function saveCart() {
-            localStorage.setItem('dev_cart', JSON.stringify(cart));
+            localStorage.setItem('pharma_cart', JSON.stringify(cart));
         }
 
         function updateCartUI() {
-            const cartItems = document.getElementById('cartItems');
-            const cartCount = document.getElementById('cartCount');
-            const cartTotal = document.getElementById('cartTotal');
-
-            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCount.textContent = totalCount;
-            cartCount.classList.toggle('hidden', totalCount === 0);
-
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            cartTotal.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
 
+            // Update Badges
+            ['desktopCartBadge', 'mobileCartBadge'].forEach(id => {
+                const badge = document.getElementById(id);
+                if (badge) {
+                    badge.textContent = count;
+                    badge.classList.toggle('hidden', count === 0);
+                }
+            });
+
+            // Update Subtotal
+            document.getElementById('cartSubtotal').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+
+            // Render Cart Drawer Items
+            const list = document.getElementById('cartItemsList');
             if (cart.length === 0) {
-                cartItems.innerHTML = `
-                    <div class="text-center py-12 text-slate-400 space-y-2">
-                        <i data-lucide="shopping-bag" class="w-10 h-10 mx-auto stroke-1"></i>
-                        <p class="text-xs font-medium">Seu carrinho está vazio.</p>
+                list.innerHTML = `
+                    <div class="text-center py-16 text-slate-400 space-y-2">
+                        <i class="fa-solid fa-basket-shopping text-3xl stroke-1"></i>
+                        <p class="text-xs font-semibold">Seu carrinho está vazio.</p>
                     </div>
                 `;
             } else {
-                cartItems.innerHTML = cart.map(item => `
-                    <div class="flex items-center gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-xs">
-                        <img src="${item.image}" alt="${item.name}" class="w-12 h-12 rounded-lg object-cover">
+                list.innerHTML = cart.map(item => `
+                    <div class="flex items-center gap-3 bg-slate-50 p-2.5 rounded-2xl border border-slate-100 text-xs">
+                        <img src="${item.image}" alt="${item.name}" class="w-12 h-12 rounded-xl object-cover bg-slate-200">
                         <div class="flex-1 min-w-0">
-                            <p class="font-bold text-slate-800 truncate">${item.name}</p>
-                            <p class="text-slate-500">R$ ${Number(item.price).toFixed(2).replace('.', ',')}</p>
+                            <h4 class="font-bold text-slate-800 truncate">${item.name}</h4>
+                            <p class="text-slate-500 font-semibold">R$ ${Number(item.price).toFixed(2).replace('.', ',')}</p>
                             <div class="flex items-center gap-2 mt-1">
-                                <button onclick="changeQuantity('${item.id}', -1)" class="w-5 h-5 bg-white border border-slate-200 rounded flex items-center justify-center font-bold">-</button>
-                                <span class="font-bold">${item.quantity}</span>
-                                <button onclick="changeQuantity('${item.id}', 1)" class="w-5 h-5 bg-white border border-slate-200 rounded flex items-center justify-center font-bold">+</button>
+                                <button onclick="updateCartQuantity('${item.id}', -1)" class="w-5 h-5 bg-white border border-slate-200 rounded-lg flex items-center justify-center font-bold text-slate-600 hover:bg-slate-100">-</button>
+                                <span class="font-bold text-slate-900">${item.quantity}</span>
+                                <button onclick="updateCartQuantity('${item.id}', 1)" class="w-5 h-5 bg-white border border-slate-200 rounded-lg flex items-center justify-center font-bold text-slate-600 hover:bg-slate-100">+</button>
                             </div>
                         </div>
+                        <span class="font-extrabold text-slate-900">R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}</span>
                     </div>
                 `).join('');
             }
-
-            lucide.createIcons();
         }
 
-        function toggleCart(forceOpen = false) {
-            const drawer = document.getElementById('cartDrawer');
-            const backdrop = document.getElementById('cartBackdrop');
-            const isOpen = !drawer.classList.contains('translate-x-full');
-
-            if (forceOpen || !isOpen) {
-                drawer.classList.remove('translate-x-full');
-                backdrop.classList.remove('opacity-0', 'pointer-events-none');
-            } else {
-                drawer.classList.add('translate-x-full');
-                backdrop.classList.add('opacity-0', 'pointer-events-none');
-            }
+        function toggleCartModal(show) {
+            document.getElementById('cartModal').classList.toggle('hidden', !show);
         }
 
         function checkoutWhatsApp() {
-            if (cart.length === 0) return alert('Seu carrinho está vazio.');
+            if (cart.length === 0) return alert('Adicione produtos ao carrinho antes de finalizar.');
 
             let msg = `🛒 *PEDIDO - ${settings.storeName.toUpperCase()}*\n\n`;
             cart.forEach(item => {
-                msg += `• ${item.quantity}x ${item.name} - R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}\n`;
+                msg += `• *${item.quantity}x ${item.name}* — R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}\n`;
             });
+
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             msg += `\n*TOTAL:* R$ ${total.toFixed(2).replace('.', ',')}\n\n`;
-            msg += `Gostaria de combinar o frete e pagamento!`;
+            msg += `Gostaria de confirmar os dados para envio e opções de pagamento (PIX/Cartão).`;
 
             window.open(`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        function openWhatsAppContact() {
-            window.open(`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent('Olá! Gostaria de mais informações sobre os produtos.')}`, '_blank');
+        function openWhatsAppDirect() {
+            window.open(`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent('Olá! Gostaria de tirar dúvidas sobre os produtos de bem-estar.')}`, '_blank');
         }
 
-        function openDevAuthModal() {
+        function triggerDevAccess() {
             if (isDevMode) {
                 openDevSettingsModal();
             } else {
@@ -570,92 +668,136 @@
             e.preventDefault();
             const pwd = document.getElementById('devPasswordInput').value;
             if (pwd === settings.adminPassword) {
-                isDevMode = true;
+                toggleDevMode(true);
                 closeDevAuthModal();
-                toggleAdminUI();
-                alert('Modo Desenvolvedor Ativado com sucesso!');
+                alert('Modo Desenvolvedor Ativado com Sucesso!');
             } else {
                 document.getElementById('devLoginError').classList.remove('hidden');
             }
         }
 
-        function toggleAdminMode() {
-            isDevMode = !isDevMode;
-            toggleAdminUI();
-        }
-
-        function toggleAdminUI() {
-            document.getElementById('adminActiveBar').classList.toggle('hidden', !isDevMode);
-            document.getElementById('addNewProductBtn').classList.toggle('hidden', !isDevMode);
+        function toggleDevMode(active) {
+            isDevMode = active;
+            renderHeader();
             renderProducts();
         }
 
-        // Add / Edit Product Modal Logic
-        function openAddProductModal() {
-            document.getElementById('productModalTitle').textContent = 'Novo Produto';
-            document.getElementById('prodEditId').value = '';
-            document.getElementById('prodNameInput').value = '';
-            document.getElementById('prodPriceInput').value = '';
-            document.getElementById('prodOldPriceInput').value = '';
-            document.getElementById('prodCategoryInput').value = '';
-            document.getElementById('prodImageInput').value = '';
-            document.getElementById('prodDescInput').value = '';
-            document.getElementById('productModal').classList.remove('hidden');
+        // Product Editor Modal Logic (Image Upload & Details)
+        function openProductEditor(productId = null) {
+            currentUploadedBase64 = null;
+            document.getElementById('editProductFile').value = '';
+
+            if (productId) {
+                const p = products.find(item => item.id === productId);
+                if (!p) return;
+                document.getElementById('editorModalTitle').textContent = 'Editar Produto';
+                document.getElementById('editProductId').value = p.id;
+                document.getElementById('editProductName').value = p.name;
+                document.getElementById('editProductPrice').value = p.price;
+                document.getElementById('editProductOldPrice').value = p.oldPrice || '';
+                document.getElementById('editProductCategory').value = p.category;
+                document.getElementById('editProductInStock').value = p.inStock ? "true" : "false";
+                document.getElementById('editProductImageUrl').value = p.image.startsWith('data:') ? '' : p.image;
+                document.getElementById('editProductDesc').value = p.description;
+
+                // Preview Image
+                setPreviewImage(p.image);
+            } else {
+                document.getElementById('editorModalTitle').textContent = 'Novo Produto';
+                document.getElementById('editProductId').value = '';
+                document.getElementById('editProductName').value = '';
+                document.getElementById('editProductPrice').value = '';
+                document.getElementById('editProductOldPrice').value = '';
+                document.getElementById('editProductCategory').value = '';
+                document.getElementById('editProductInStock').value = 'true';
+                document.getElementById('editProductImageUrl').value = '';
+                document.getElementById('editProductDesc').value = '';
+                setPreviewImage('');
+            }
+
+            document.getElementById('productEditorModal').classList.remove('hidden');
         }
 
-        function editProduct(id) {
-            const p = products.find(item => item.id === id);
-            if (!p) return;
-
-            document.getElementById('productModalTitle').textContent = 'Editar Produto';
-            document.getElementById('prodEditId').value = p.id;
-            document.getElementById('prodNameInput').value = p.name;
-            document.getElementById('prodPriceInput').value = p.price;
-            document.getElementById('prodOldPriceInput').value = p.oldPrice || '';
-            document.getElementById('prodCategoryInput').value = p.category;
-            document.getElementById('prodImageInput').value = p.image;
-            document.getElementById('prodDescInput').value = p.description;
-            document.getElementById('productModal').classList.remove('hidden');
+        function closeProductEditorModal() {
+            document.getElementById('productEditorModal').classList.add('hidden');
         }
 
-        function closeProductModal() {
-            document.getElementById('productModal').classList.add('hidden');
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentUploadedBase64 = e.target.result;
+                    setPreviewImage(currentUploadedBase64);
+                    document.getElementById('editProductImageUrl').value = ''; // clear url input
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function previewUrlImage(url) {
+            currentUploadedBase64 = null; // override file upload if URL typed
+            setPreviewImage(url);
+        }
+
+        function setPreviewImage(src) {
+            const img = document.getElementById('imagePreview');
+            const noText = document.getElementById('noPreviewText');
+            if (src && src.trim() !== '') {
+                img.src = src;
+                img.classList.remove('hidden');
+                noText.classList.add('hidden');
+            } else {
+                img.src = '';
+                img.classList.add('hidden');
+                noText.classList.remove('hidden');
+            }
         }
 
         function handleSaveProduct(e) {
             e.preventDefault();
-            const id = document.getElementById('prodEditId').value || 'prod_' + Date.now();
-            const newProd = {
-                id,
-                name: document.getElementById('prodNameInput').value,
-                price: parseFloat(document.getElementById('prodPriceInput').value),
-                oldPrice: document.getElementById('prodOldPriceInput').value ? parseFloat(document.getElementById('prodOldPriceInput').value) : null,
-                category: document.getElementById('prodCategoryInput').value,
-                image: document.getElementById('prodImageInput').value,
-                description: document.getElementById('prodDescInput').value
-            };
-
-            const existingIndex = products.findIndex(p => p.id === id);
-            if (existingIndex > -1) {
-                products[existingIndex] = newProd;
-            } else {
-                products.push(newProd);
+            const id = document.getElementById('editProductId').value || 'prod_' + Date.now();
+            
+            // Image selection prioritization (Upload > URL > Default Fallback)
+            let finalImage = currentUploadedBase64 || document.getElementById('editProductImageUrl').value.trim();
+            if (!finalImage) {
+                finalImage = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80';
             }
 
-            localStorage.setItem('dev_products', JSON.stringify(products));
-            closeProductModal();
+            const newProduct = {
+                id,
+                name: document.getElementById('editProductName').value,
+                price: parseFloat(document.getElementById('editProductPrice').value),
+                oldPrice: document.getElementById('editProductOldPrice').value ? parseFloat(document.getElementById('editProductOldPrice').value) : null,
+                category: document.getElementById('editProductCategory').value,
+                inStock: document.getElementById('editProductInStock').value === "true",
+                image: finalImage,
+                description: document.getElementById('editProductDesc').value
+            };
+
+            const index = products.findIndex(p => p.id === id);
+            if (index > -1) {
+                products[index] = newProduct;
+            } else {
+                products.push(newProduct);
+            }
+
+            localStorage.setItem('pharma_products', JSON.stringify(products));
+            closeProductEditorModal();
+            renderCategories();
             renderProducts();
         }
 
-        function deleteProduct(id) {
-            if (confirm('Tem certeza que deseja excluir este produto?')) {
-                products = products.filter(p => p.id !== id);
-                localStorage.setItem('dev_products', JSON.stringify(products));
+        function deleteProduct(productId) {
+            if (confirm('Tem certeza que deseja excluir este produto do catálogo?')) {
+                products = products.filter(p => p.id !== productId);
+                localStorage.setItem('pharma_products', JSON.stringify(products));
+                renderCategories();
                 renderProducts();
             }
         }
 
-        // Dev Settings Modal Logic
+        // Developer Settings Modal
         function openDevSettingsModal() {
             document.getElementById('settingStoreName').value = settings.storeName;
             document.getElementById('settingWhatsApp').value = settings.whatsapp;
@@ -667,7 +809,7 @@
             document.getElementById('devSettingsModal').classList.add('hidden');
         }
 
-        function saveDevSettings(e) {
+        function handleSaveDevSettings(e) {
             e.preventDefault();
             settings.storeName = document.getElementById('settingStoreName').value;
             settings.whatsapp = document.getElementById('settingWhatsApp').value;
@@ -677,14 +819,33 @@
                 settings.adminPassword = newPwd;
             }
 
-            localStorage.setItem('dev_settings', JSON.stringify(settings));
-            updateHeaderAndSettings();
+            localStorage.setItem('pharma_settings', JSON.stringify(settings));
+            renderHeader();
             closeDevSettingsModal();
             alert('Configurações salvas!');
         }
 
-        // Initialize Application
-        window.onload = initApp;
+        function resetToDefaults() {
+            if (confirm('Deseja restaurar todos os produtos e configurações para o estado inicial?')) {
+                localStorage.clear();
+                settings = DEFAULT_SETTINGS;
+                products = DEFAULT_PRODUCTS;
+                cart = [];
+                location.reload();
+            }
+        }
+
+        // Filters Handling
+        function selectCategory(cat) {
+            selectedCategory = cat;
+            renderCategories();
+            renderProducts();
+        }
+
+        function handleSearch(val) {
+            searchQuery = val;
+            renderProducts();
+        }
     </script>
 </body>
 </html>
